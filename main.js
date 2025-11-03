@@ -2,60 +2,61 @@ import './style.css'
 
 const teams = [
   {
-    name: 'Team 1',
-    players: ['Alice Johnson', 'Bob Smith'],
+    name: 'Towson X',
+    players: ['Elias', 'Yoshi'],
     pool: 'A',
     description: 'Team 1 brings a dynamic duo with excellent net play and consistent baseline shots. Known for their strategic doubles positioning and competitive spirit.'
   },
   {
-    name: 'Team 2',
-    players: ['Charlie Brown', 'Diana Prince'],
+    name: 'Team Where is my husband',
+    players: ['Brooke', 'Varidhi'],
     pool: 'B',
     description: 'Team 2 combines aggressive serving with solid return game. Their teamwork and communication on court make them a formidable opponent in any match.'
   },
   {
-    name: 'Team 3',
-    players: ['Ethan Hunt', 'Fiona Green'],
+    name: 'Team Siblings or Married',
+    players: ['Laurel', 'Zim'],
     pool: 'A',
     description: 'Team 3 excels in fast-paced rallies with quick reflexes at the net. Their high-energy style and tactical awareness make them favorites in close matches.'
   },
   {
-    name: 'Team 4',
-    players: ['George Miller', 'Hannah Lee'],
+    name: 'Team uuWuu',
+    players: ['Tab', 'NoNo'],
     pool: 'B',
     description: 'Team 4 showcases balanced play with strength in both offense and defense. Their consistent performance and experience shine through in every tournament.'
   },
   {
-    name: 'Team 5',
-    players: ['Ivan Petrov', 'Julia White'],
+    name: 'Just Roomates',
+    players: ['Moose', 'Austin'],
     pool: 'A',
     description: 'Team 5 features powerful serves and precision groundstrokes. Their coordinated volleys and court coverage make them a challenging team to face.'
   },
   {
-    name: 'Team 6',
-    players: ['Kevin Hart', 'Lisa Chen'],
+    name: 'Towson Y',
+    players: ['Dan', 'Sara'],
     pool: 'B',
     description: 'Team 6 brings finesse and timing to their game with exceptional footwork. Their ability to read the court and adapt strategy gives them an edge.'
   },
   {
-    name: 'Team 7',
-    players: ['Marcus Johnson', 'Nina Patel'],
+    name: 'Team Fun',
+    players: ['Colin', 'Cait'],
     pool: 'A',
     description: 'Team 7 combines youth and energy with tactical maturity. Their serve-and-volley game and aggressive baseline play create numerous winning opportunities.'
   },
   {
-    name: 'Team 8',
-    players: ['Oscar Garcia', 'Patricia Lopez'],
+    name: 'Team 1 Bed 1 Bath 1 Den',
+    players: ['Dan FB', 'Jess'],
     pool: 'B',
     description: 'Team 8 is known for their versatility and mental toughness in clutch situations. Their well-rounded game and experience make them consistent contenders.'
   }
 ]
 
 const alternates = [
-  'Rachel Green',
-  'Samuel Taylor',
-  'Tina Turner',
-  'Ulysses Grant'
+  'Team Julia and Theo',
+  'Team Joel and Luke',
+  'Undisclosed',
+  'Team Adam and Vinny',
+  'Team PeeCeeTee'
 ]
 
 // Password - change this to whatever you want
