@@ -6,8 +6,8 @@ document.querySelector('#app').innerHTML = `
     <p>Turkey Tennis Invitational.</p>
   
     <nav class="tabs">
-      <button id="submit-tab" class="tab-button active">Submit Scores</button>
       <button id="schedule-tab" class="tab-button">Schedule and Results</button>
+      <button id="submit-tab" class="tab-button active">Submit Scores</button>
     </nav>
     
     <div id="content" class="tab-content">
