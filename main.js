@@ -117,6 +117,110 @@ const poolsHTML = `
       </table>
     </div>
   </div>
+
+  <div class="schedule-section">
+    <h3>Pool A Schedule & Scores</h3>
+    <table class="schedule-table">
+      <thead>
+        <tr>
+          <th>Team 1</th>
+          <th>Team 2</th>
+          <th>Score</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Team 1</td>
+          <td>Team 3</td>
+          <td>-</td>
+          <td>Upcoming</td>
+        </tr>
+        <tr>
+          <td>Team 5</td>
+          <td>Team 7</td>
+          <td>-</td>
+          <td>Upcoming</td>
+        </tr>
+        <tr>
+          <td>Team 1</td>
+          <td>Team 5</td>
+          <td>-</td>
+          <td>Upcoming</td>
+        </tr>
+        <tr>
+          <td>Team 3</td>
+          <td>Team 7</td>
+          <td>-</td>
+          <td>Upcoming</td>
+        </tr>
+        <tr>
+          <td>Team 1</td>
+          <td>Team 7</td>
+          <td>-</td>
+          <td>Upcoming</td>
+        </tr>
+        <tr>
+          <td>Team 3</td>
+          <td>Team 5</td>
+          <td>-</td>
+          <td>Upcoming</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="schedule-section">
+    <h3>Pool B Schedule & Scores</h3>
+    <table class="schedule-table">
+      <thead>
+        <tr>
+          <th>Team 1</th>
+          <th>Team 2</th>
+          <th>Score</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Team 2</td>
+          <td>Team 4</td>
+          <td>-</td>
+          <td>Upcoming</td>
+        </tr>
+        <tr>
+          <td>Team 6</td>
+          <td>Team 8</td>
+          <td>-</td>
+          <td>Upcoming</td>
+        </tr>
+        <tr>
+          <td>Team 2</td>
+          <td>Team 6</td>
+          <td>-</td>
+          <td>Upcoming</td>
+        </tr>
+        <tr>
+          <td>Team 4</td>
+          <td>Team 8</td>
+          <td>-</td>
+          <td>Upcoming</td>
+        </tr>
+        <tr>
+          <td>Team 2</td>
+          <td>Team 8</td>
+          <td>-</td>
+          <td>Upcoming</td>
+        </tr>
+        <tr>
+          <td>Team 4</td>
+          <td>Team 6</td>
+          <td>-</td>
+          <td>Upcoming</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 `
 
 const teamDetailsHTML = teams.map((team, idx) => `
