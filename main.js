@@ -5,49 +5,49 @@ const teams = [
     name: 'Towson X',
     players: ['Elias', 'Yoshi'],
     pool: 'A',
-    description: 'Team 1 brings a dynamic duo with excellent net play and consistent baseline shots. Known for their strategic doubles positioning and competitive spirit.'
+    description: 'Welcome Towson X'
   },
   {
     name: 'Team Where is my husband',
     players: ['Brooke', 'Varidhi'],
     pool: 'B',
-    description: 'Team 2 combines aggressive serving with solid return game. Their teamwork and communication on court make them a formidable opponent in any match.'
+    description: 'Brooke is without her husband who is tall. But she should play well.'
   },
   {
     name: 'Team Siblings or Married',
     players: ['Laurel', 'Zim'],
     pool: 'A',
-    description: 'Team 3 excels in fast-paced rallies with quick reflexes at the net. Their high-energy style and tactical awareness make them favorites in close matches.'
+    description: 'Jury is still out.  Might be both'
   },
   {
     name: 'Team uuWuu',
     players: ['Tab', 'NoNo'],
     pool: 'B',
-    description: 'Team 4 showcases balanced play with strength in both offense and defense. Their consistent performance and experience shine through in every tournament.'
+    description: 'Actively over thinking their match and processing the situation like anime '
   },
   {
     name: 'Just Roomates',
     players: ['Moose', 'Austin'],
     pool: 'A',
-    description: 'Team 5 features powerful serves and precision groundstrokes. Their coordinated volleys and court coverage make them a challenging team to face.'
+    description: 'Just roomates I swear'
   },
   {
     name: 'Towson Y',
     players: ['Dan', 'Sara'],
     pool: 'B',
-    description: 'Team 6 brings finesse and timing to their game with exceptional footwork. Their ability to read the court and adapt strategy gives them an edge.'
+    description: 'ugh, another townson.'
   },
   {
     name: 'Team Fun',
     players: ['Colin', 'Cait'],
     pool: 'A',
-    description: 'Team 7 combines youth and energy with tactical maturity. Their serve-and-volley game and aggressive baseline play create numerous winning opportunities.'
+    description: 'Should play good .'
   },
   {
     name: 'Team 1 Bed 1 Bath 1 Den',
     players: ['Dan FB', 'Jess'],
     pool: 'B',
-    description: 'Team 8 is known for their versatility and mental toughness in clutch situations. Their well-rounded game and experience make them consistent contenders.'
+    description: 'will be good unless kaboom'
   }
 ]
 
@@ -296,6 +296,40 @@ const bracketHTML = `
   </div>
 `
 
+const consolationBracketHTML = `
+  <div class="bracket-container">
+    <div class="bracket-round">
+      <h3>Consolation Semifinals</h3>
+      <div class="bracket-match">
+        <div class="bracket-team">Loser QF1</div>
+        <div class="bracket-team">Loser QF2</div>
+        <div class="bracket-score">-</div>
+      </div>
+      <div class="bracket-match">
+        <div class="bracket-team">Loser QF3</div>
+        <div class="bracket-team">Loser QF4</div>
+        <div class="bracket-score">-</div>
+      </div>
+    </div>
+    
+    <div class="bracket-round">
+      <h3>Consolation Finals</h3>
+      <div class="bracket-match">
+        <div class="bracket-team">Winner CSF1</div>
+        <div class="bracket-team">Winner CSF2</div>
+        <div class="bracket-score">-</div>
+      </div>
+    </div>
+    
+    <div class="bracket-round">
+      <h3>5th Place</h3>
+      <div class="bracket-champion consolation-winner">
+        <div class="bracket-team">TBD</div>
+      </div>
+    </div>
+  </div>
+`
+
 const teamDetailsHTML = teams.map((team, idx) => `
   <div class="team-detail">
     <h2>${team.name}</h2>
@@ -338,6 +372,7 @@ document.querySelector('#app').innerHTML = `
         <div class="subtabs">
           <button class="subtab-button active" data-subtab="pool-play">Pool Play</button>
           <button class="subtab-button" data-subtab="bracket-play">Bracket Play</button>
+          <button class="subtab-button" data-subtab="consolation-bracket">Consolation Bracket</button>
         </div>
         <div class="subtab-content">
           <div id="pool-play" class="subtab-pane active">
@@ -345,6 +380,9 @@ document.querySelector('#app').innerHTML = `
           </div>
           <div id="bracket-play" class="subtab-pane">
             ${bracketHTML}
+          </div>
+          <div id="consolation-bracket" class="subtab-pane">
+            ${consolationBracketHTML}
           </div>
         </div>
       </div>

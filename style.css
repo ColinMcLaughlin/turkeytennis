@@ -379,3 +379,12 @@ p {
   font-weight: bold;
   color: #d4af37;
 }
+
+.consolation-winner {
+  border-color: #c0c0c0;
+  background: #f5f5f5;
+}
+
+.consolation-winner .bracket-team {
+  color: #666;
+}
