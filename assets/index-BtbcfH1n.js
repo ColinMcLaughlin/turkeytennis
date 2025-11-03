@@ -1,4 +1,4 @@
-(function(){const e=document.createElement("link").relList;if(e&&e.supports&&e.supports("modulepreload"))return;for(const s of document.querySelectorAll('link[rel="modulepreload"]'))d(s);new MutationObserver(s=>{for(const a of s)if(a.type==="childList")for(const o of a.addedNodes)o.tagName==="LINK"&&o.rel==="modulepreload"&&d(o)}).observe(document,{childList:!0,subtree:!0});function r(s){const a={};return s.integrity&&(a.integrity=s.integrity),s.referrerPolicy&&(a.referrerPolicy=s.referrerPolicy),s.crossOrigin==="use-credentials"?a.credentials="include":s.crossOrigin==="anonymous"?a.credentials="omit":a.credentials="same-origin",a}function d(s){if(s.ep)return;s.ep=!0;const a=r(s);fetch(s.href,a)}})();const i=[{name:"Towson X",players:["Elias","Yoshi"],pool:"A",description:"Team 1 brings a dynamic duo with excellent net play and consistent baseline shots. Known for their strategic doubles positioning and competitive spirit."},{name:"Team Where is my husband",players:["Brooke","Varidhi"],pool:"B",description:"Team 2 combines aggressive serving with solid return game. Their teamwork and communication on court make them a formidable opponent in any match."},{name:"Team Siblings or Married",players:["Laurel","Zim"],pool:"A",description:"Team 3 excels in fast-paced rallies with quick reflexes at the net. Their high-energy style and tactical awareness make them favorites in close matches."},{name:"Team uuWuu",players:["Tab","NoNo"],pool:"B",description:"Team 4 showcases balanced play with strength in both offense and defense. Their consistent performance and experience shine through in every tournament."},{name:"Just Roomates",players:["Moose","Austin"],pool:"A",description:"Team 5 features powerful serves and precision groundstrokes. Their coordinated volleys and court coverage make them a challenging team to face."},{name:"Towson Y",players:["Dan","Sara"],pool:"B",description:"Team 6 brings finesse and timing to their game with exceptional footwork. Their ability to read the court and adapt strategy gives them an edge."},{name:"Team Fun",players:["Colin","Cait"],pool:"A",description:"Team 7 combines youth and energy with tactical maturity. Their serve-and-volley game and aggressive baseline play create numerous winning opportunities."},{name:"Team 1 Bed 1 Bath 1 Den",players:["Dan FB","Jess"],pool:"B",description:"Team 8 is known for their versatility and mental toughness in clutch situations. Their well-rounded game and experience make them consistent contenders."}],u=["Team Julia and Theo","Team Joel and Luke","Undisclosed","Team Adam and Vinny","Team PeeCeeTee"],v="turkey2024",b=i.map((t,e)=>`
+(function(){const e=document.createElement("link").relList;if(e&&e.supports&&e.supports("modulepreload"))return;for(const s of document.querySelectorAll('link[rel="modulepreload"]'))d(s);new MutationObserver(s=>{for(const a of s)if(a.type==="childList")for(const o of a.addedNodes)o.tagName==="LINK"&&o.rel==="modulepreload"&&d(o)}).observe(document,{childList:!0,subtree:!0});function c(s){const a={};return s.integrity&&(a.integrity=s.integrity),s.referrerPolicy&&(a.referrerPolicy=s.referrerPolicy),s.crossOrigin==="use-credentials"?a.credentials="include":s.crossOrigin==="anonymous"?a.credentials="omit":a.credentials="same-origin",a}function d(s){if(s.ep)return;s.ep=!0;const a=c(s);fetch(s.href,a)}})();const i=[{name:"Towson X",players:["Elias","Yoshi"],pool:"A",description:"Welcome Towson X"},{name:"Team Where is my husband",players:["Brooke","Varidhi"],pool:"B",description:"Brooke is without her husband who is tall. But she should play well."},{name:"Team Siblings or Married",players:["Laurel","Zim"],pool:"A",description:"Jury is still out.  Might be both"},{name:"Team uuWuu",players:["Tab","NoNo"],pool:"B",description:"Actively over thinking their match and processing the situation like anime "},{name:"Just Roomates",players:["Moose","Austin"],pool:"A",description:"Just roomates I swear"},{name:"Towson Y",players:["Dan","Sara"],pool:"B",description:"ugh, another townson."},{name:"Team Fun",players:["Colin","Cait"],pool:"A",description:"Should play good ."},{name:"Team 1 Bed 1 Bath 1 Den",players:["Dan FB","Jess"],pool:"B",description:"will be good unless kaboom"}],u=["Team Julia and Theo","Team Joel and Luke","Undisclosed","Team Adam and Vinny","Team PeeCeeTee"],v="turkey2024",b=i.map((t,e)=>`
   <div class="team-card" data-team-id="${e}">
     <h3>${t.name}</h3>
     <ul>
@@ -6,7 +6,7 @@
       <li>${t.players[1]}</li>
     </ul>
   </div>
-`).join(""),h=u.map(t=>`<li>${t}</li>`).join(""),l=i.map((t,e)=>`<option value="${e}">${t.name}</option>`).join(""),p=`
+`).join(""),h=u.map(t=>`<li>${t}</li>`).join(""),n=i.map((t,e)=>`<option value="${e}">${t.name}</option>`).join(""),p=`
   <div class="pools-container">
     <div class="pool">
       <h3>Pool A</h3>
@@ -222,6 +222,38 @@
       </div>
     </div>
   </div>
+`,k=`
+  <div class="bracket-container">
+    <div class="bracket-round">
+      <h3>Consolation Semifinals</h3>
+      <div class="bracket-match">
+        <div class="bracket-team">Loser QF1</div>
+        <div class="bracket-team">Loser QF2</div>
+        <div class="bracket-score">-</div>
+      </div>
+      <div class="bracket-match">
+        <div class="bracket-team">Loser QF3</div>
+        <div class="bracket-team">Loser QF4</div>
+        <div class="bracket-score">-</div>
+      </div>
+    </div>
+    
+    <div class="bracket-round">
+      <h3>Consolation Finals</h3>
+      <div class="bracket-match">
+        <div class="bracket-team">Winner CSF1</div>
+        <div class="bracket-team">Winner CSF2</div>
+        <div class="bracket-score">-</div>
+      </div>
+    </div>
+    
+    <div class="bracket-round">
+      <h3>5th Place</h3>
+      <div class="bracket-champion consolation-winner">
+        <div class="bracket-team">TBD</div>
+      </div>
+    </div>
+  </div>
 `,T=i.map((t,e)=>`
   <div class="team-detail">
     <h2>${t.name}</h2>
@@ -262,6 +294,7 @@
         <div class="subtabs">
           <button class="subtab-button active" data-subtab="pool-play">Pool Play</button>
           <button class="subtab-button" data-subtab="bracket-play">Bracket Play</button>
+          <button class="subtab-button" data-subtab="consolation-bracket">Consolation Bracket</button>
         </div>
         <div class="subtab-content">
           <div id="pool-play" class="subtab-pane active">
@@ -269,6 +302,9 @@
           </div>
           <div id="bracket-play" class="subtab-pane">
             ${y}
+          </div>
+          <div id="consolation-bracket" class="subtab-pane">
+            ${k}
           </div>
         </div>
       </div>
@@ -279,14 +315,14 @@
             <label for="team1">Team 1:</label>
             <select id="team1">
               <option value="">Select Team</option>
-              ${l}
+              ${n}
             </select>
           </div>
           <div class="form-group">
             <label for="team2">Team 2:</label>
             <select id="team2">
               <option value="">Select Team</option>
-              ${l}
+              ${n}
             </select>
           </div>
           <div class="form-group">
@@ -313,4 +349,4 @@
       </div>
     </div>
   </div>
-`;const m=t=>{document.querySelectorAll(".tab-button").forEach(e=>e.classList.remove("active")),document.querySelectorAll(".tab-pane").forEach(e=>e.classList.remove("active")),document.querySelector(`[data-tab="${t}"]`).classList.add("active"),document.getElementById(t).classList.add("active")},g=t=>{document.querySelectorAll(".subtab-button").forEach(e=>e.classList.remove("active")),document.querySelectorAll(".subtab-pane").forEach(e=>e.classList.remove("active")),document.querySelector(`[data-subtab="${t}"]`).classList.add("active"),document.getElementById(t).classList.add("active")};document.querySelectorAll(".tab-button").forEach(t=>{t.addEventListener("click",()=>{const e=t.getAttribute("data-tab");m(e)})});document.querySelectorAll(".subtab-button").forEach(t=>{t.addEventListener("click",()=>{const e=t.getAttribute("data-subtab");g(e)})});document.querySelectorAll(".team-card").forEach(t=>{t.addEventListener("click",()=>{m("teams")})});document.getElementById("submitBtn").addEventListener("click",()=>{const t=document.getElementById("team1").value,e=document.getElementById("team2").value,r=parseInt(document.getElementById("score1").value)||0,d=parseInt(document.getElementById("score2").value)||0,s=document.getElementById("password").value,a=document.getElementById("result");if(s!==v){a.textContent="Incorrect password!",a.className="result error";return}if(!t||!e){a.textContent="Please select both teams",a.className="result error";return}if(t===e){a.textContent="Please select two different teams",a.className="result error";return}const o=i[t].name,n=i[e].name;let c;if(r>d)c=o;else if(d>r)c=n;else{a.textContent=`${o} ${r} - ${d} ${n} (Tied)`,a.className="result tie";return}a.textContent=`${o} ${r} - ${d} ${n} | Winner: ${c}`,a.className="result success",document.getElementById("team1").value="",document.getElementById("team2").value="",document.getElementById("score1").value="",document.getElementById("score2").value="",document.getElementById("password").value=""});
+`;const m=t=>{document.querySelectorAll(".tab-button").forEach(e=>e.classList.remove("active")),document.querySelectorAll(".tab-pane").forEach(e=>e.classList.remove("active")),document.querySelector(`[data-tab="${t}"]`).classList.add("active"),document.getElementById(t).classList.add("active")},f=t=>{document.querySelectorAll(".subtab-button").forEach(e=>e.classList.remove("active")),document.querySelectorAll(".subtab-pane").forEach(e=>e.classList.remove("active")),document.querySelector(`[data-subtab="${t}"]`).classList.add("active"),document.getElementById(t).classList.add("active")};document.querySelectorAll(".tab-button").forEach(t=>{t.addEventListener("click",()=>{const e=t.getAttribute("data-tab");m(e)})});document.querySelectorAll(".subtab-button").forEach(t=>{t.addEventListener("click",()=>{const e=t.getAttribute("data-subtab");f(e)})});document.querySelectorAll(".team-card").forEach(t=>{t.addEventListener("click",()=>{m("teams")})});document.getElementById("submitBtn").addEventListener("click",()=>{const t=document.getElementById("team1").value,e=document.getElementById("team2").value,c=parseInt(document.getElementById("score1").value)||0,d=parseInt(document.getElementById("score2").value)||0,s=document.getElementById("password").value,a=document.getElementById("result");if(s!==v){a.textContent="Incorrect password!",a.className="result error";return}if(!t||!e){a.textContent="Please select both teams",a.className="result error";return}if(t===e){a.textContent="Please select two different teams",a.className="result error";return}const o=i[t].name,r=i[e].name;let l;if(c>d)l=o;else if(d>c)l=r;else{a.textContent=`${o} ${c} - ${d} ${r} (Tied)`,a.className="result tie";return}a.textContent=`${o} ${c} - ${d} ${r} | Winner: ${l}`,a.className="result success",document.getElementById("team1").value="",document.getElementById("team2").value="",document.getElementById("score1").value="",document.getElementById("score2").value="",document.getElementById("password").value=""});
