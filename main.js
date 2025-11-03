@@ -238,6 +238,64 @@ const poolsHTML = `
   </div>
 `
 
+const bracketHTML = `
+  <div class="bracket-container">
+    <div class="bracket-round">
+      <h3>Quarterfinals</h3>
+      <div class="bracket-match">
+        <div class="bracket-team">Pool A 1st</div>
+        <div class="bracket-team">Pool B 4th</div>
+        <div class="bracket-score">-</div>
+      </div>
+      <div class="bracket-match">
+        <div class="bracket-team">Pool B 1st</div>
+        <div class="bracket-team">Pool A 4th</div>
+        <div class="bracket-score">-</div>
+      </div>
+      <div class="bracket-match">
+        <div class="bracket-team">Pool A 2nd</div>
+        <div class="bracket-team">Pool B 3rd</div>
+        <div class="bracket-score">-</div>
+      </div>
+      <div class="bracket-match">
+        <div class="bracket-team">Pool B 2nd</div>
+        <div class="bracket-team">Pool A 3rd</div>
+        <div class="bracket-score">-</div>
+      </div>
+    </div>
+    
+    <div class="bracket-round">
+      <h3>Semifinals</h3>
+      <div class="bracket-match">
+        <div class="bracket-team">Winner QF1</div>
+        <div class="bracket-team">Winner QF2</div>
+        <div class="bracket-score">-</div>
+      </div>
+      <div class="bracket-match">
+        <div class="bracket-team">Winner QF3</div>
+        <div class="bracket-team">Winner QF4</div>
+        <div class="bracket-score">-</div>
+      </div>
+    </div>
+    
+    <div class="bracket-round">
+      <h3>Finals</h3>
+      <div class="bracket-match">
+        <div class="bracket-team">Winner SF1</div>
+        <div class="bracket-team">Winner SF2</div>
+        <div class="bracket-score">-</div>
+      </div>
+    </div>
+    
+    <div class="bracket-round">
+      <h3>Champion</h3>
+      <div class="bracket-champion">
+        <div class="bracket-team">TBD</div>
+      </div>
+    </div>
+  </div>
+`
+
 const teamDetailsHTML = teams.map((team, idx) => `
   <div class="team-detail">
     <h2>${team.name}</h2>
@@ -277,7 +335,18 @@ document.querySelector('#app').innerHTML = `
       </div>
       <div id="schedule" class="tab-pane">
         <h2>Schedule and Results</h2>
-        ${poolsHTML}
+        <div class="subtabs">
+          <button class="subtab-button active" data-subtab="pool-play">Pool Play</button>
+          <button class="subtab-button" data-subtab="bracket-play">Bracket Play</button>
+        </div>
+        <div class="subtab-content">
+          <div id="pool-play" class="subtab-pane active">
+            ${poolsHTML}
+          </div>
+          <div id="bracket-play" class="subtab-pane">
+            ${bracketHTML}
+          </div>
+        </div>
       </div>
       <div id="scores" class="tab-pane">
         <h2>Submit Scores</h2>
@@ -330,10 +399,25 @@ const switchTab = (tabName) => {
   document.getElementById(tabName).classList.add('active')
 }
 
+const switchSubtab = (subtabName) => {
+  document.querySelectorAll('.subtab-button').forEach(btn => btn.classList.remove('active'))
+  document.querySelectorAll('.subtab-pane').forEach(pane => pane.classList.remove('active'))
+
+  document.querySelector(`[data-subtab="${subtabName}"]`).classList.add('active')
+  document.getElementById(subtabName).classList.add('active')
+}
+
 document.querySelectorAll('.tab-button').forEach(button => {
   button.addEventListener('click', () => {
     const tabName = button.getAttribute('data-tab')
     switchTab(tabName)
+  })
+})
+
+document.querySelectorAll('.subtab-button').forEach(button => {
+  button.addEventListener('click', () => {
+    const subtabName = button.getAttribute('data-subtab')
+    switchSubtab(subtabName)
   })
 })
 
