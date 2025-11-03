@@ -74,11 +74,92 @@ p {
   border-radius: 8px;
   padding: 1.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
 }
 
 .team-card:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.pools-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.pool {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.pool h3 {
+  margin-top: 0;
+  color: #0066cc;
+  font-size: 1.2rem;
+}
+
+.standings-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.standings-table thead {
+  background-color: #f5f5f5;
+}
+
+.standings-table th {
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #ddd;
+}
+
+.standings-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+  color: #555;
+}
+
+.standings-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+.team-details-container {
+  display: grid;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.team-detail {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.team-detail h2 {
+  margin-top: 0;
+  color: #0066cc;
+}
+
+.team-players,
+.team-pool {
+  margin-bottom: 1rem;
+  color: #555;
+}
+
+.team-description {
+  margin-top: 1.5rem;
+  line-height: 1.6;
+  color: #666;
 }
 
 .team-card h3 {
