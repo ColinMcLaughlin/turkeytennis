@@ -58,6 +58,9 @@ const alternates = [
   'Ulysses Grant'
 ]
 
+// Password - change this to whatever you want
+const CORRECT_PASSWORD = "turkey2024";
+
 const teamsHTML = teams.map((team, idx) => `
   <div class="team-card" data-team-id="${idx}">
     <h3>${team.name}</h3>
@@ -181,6 +184,10 @@ document.querySelector('#app').innerHTML = `
             <label for="score2">Team 2 Score:</label>
             <input type="number" id="score2" min="0" placeholder="0">
           </div>
+          <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" placeholder="Enter password">
+          </div>
           <button id="submitBtn" class="submit-btn">Submit Score</button>
           <div id="result" class="result"></div>
         </div>
@@ -221,8 +228,16 @@ document.getElementById('submitBtn').addEventListener('click', () => {
   const team2Idx = document.getElementById('team2').value
   const score1 = parseInt(document.getElementById('score1').value) || 0
   const score2 = parseInt(document.getElementById('score2').value) || 0
+  const password = document.getElementById('password').value
 
   const resultDiv = document.getElementById('result')
+
+  // Check password first
+  if (password !== CORRECT_PASSWORD) {
+    resultDiv.textContent = 'Incorrect password!'
+    resultDiv.className = 'result error'
+    return
+  }
 
   if (!team1Idx || !team2Idx) {
     resultDiv.textContent = 'Please select both teams'
@@ -252,4 +267,11 @@ document.getElementById('submitBtn').addEventListener('click', () => {
 
   resultDiv.textContent = `${team1Name} ${score1} - ${score2} ${team2Name} | Winner: ${winner}`
   resultDiv.className = 'result success'
+  
+  // Clear the form after successful submission
+  document.getElementById('team1').value = ''
+  document.getElementById('team2').value = ''
+  document.getElementById('score1').value = ''
+  document.getElementById('score2').value = ''
+  document.getElementById('password').value = ''
 })
