@@ -11,6 +11,7 @@ const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial
 const TOURNAMENT_DOC_REF = `artifacts/${appId}/public/data/tournament/tournament-state`;
 
 // --- Initial Tournament State (Used only if no data exists in Firestore) ---
+// ... (INITIAL_TEAMS, INITIAL_SCHEDULE, INITIAL_BRACKET_MATCHES, INITIAL_ALTERNATES, CORRECT_PASSWORD remain the same) ...
 const INITIAL_TEAMS = [
   { name: 'Towson X', players: ['Elias', 'Yoshi'], pool: 'A', description: 'Welcome Towson X' },
   { name: 'Where is my husband', players: ['Brooke', 'Varidhi'], pool: 'B', description: 'Brooke is without her husband who is tall. But she should play well.' },
@@ -488,10 +489,10 @@ const renderApp = () => {
 
   } catch (e) {
     console.error("Critical Rendering Error:", e);
-    // Display a major error message if rendering fails
-    appDiv.innerHTML = `<div style="color: red; padding: 2rem;">CRITICAL ERROR: Failed to render the application. Check the console for data or template errors.</div>`;
+    // If rendering fails, display a controlled error message in the main div
     document.getElementById('loading').style.display = 'none';
     document.getElementById('app').style.display = 'block';
+    appDiv.innerHTML = `<div style="color: red; padding: 2rem;">CRITICAL RENDERING ERROR: Failed to build the page content. Check the console (F12) for JavaScript errors.</div>`;
   }
 };
 
@@ -552,29 +553,35 @@ const updateBracketMatchSelect = () => {
 // --- Event Listeners ---
 
 const attachEventListeners = () => {
-  // Clear previous listeners (important since renderApp recreates DOM elements)
+  // Use event delegation on the main app div
   const appDiv = document.getElementById('app');
   if (!appDiv) return;
 
-  // Use event delegation for tabs, subtabs, and team cards
-  appDiv.addEventListener('click', (e) => {
-    if (e.target.classList.contains('tab-button') && e.target.getAttribute('data-tab')) {
-      switchTab(e.target.getAttribute('data-tab'));
-    } else if (e.target.classList.contains('subtab-button') && e.target.getAttribute('data-subtab')) {
-      // Manual content injection needed for schedule subtabs 
-      const subtabName = e.target.getAttribute('data-subtab');
-      if (subtabName === 'standings') {
-        document.getElementById('standings').innerHTML = generateStandingsHTML();
-      } else if (subtabName === 'pool-play') {
-        document.getElementById('pool-play').innerHTML = generatePoolPlayHTML();
-      } else if (subtabName === 'brackets') {
-        document.getElementById('brackets').innerHTML = generateBracketsHTML();
+  // Use a temporary event handler to capture all clicks and remove itself later
+  const eventHandler = (e) => {
+      if (e.target.classList.contains('tab-button') && e.target.getAttribute('data-tab')) {
+        switchTab(e.target.getAttribute('data-tab'));
+      } else if (e.target.classList.contains('subtab-button') && e.target.getAttribute('data-subtab')) {
+        // Manual content injection needed for schedule subtabs 
+        const subtabName = e.target.getAttribute('data-subtab');
+        if (subtabName === 'standings') {
+          // No need to re-render, data is fresh from Firestore
+        } else if (subtabName === 'pool-play') {
+          // No need to re-render, data is fresh from Firestore
+        } else if (subtabName === 'brackets') {
+          // No need to re-render, data is fresh from Firestore
+        }
+        switchSubtab(subtabName);
+      } else if (e.target.classList.contains('team-card') && e.target.getAttribute('data-team-id')) {
+        switchTab('teams');
       }
-      switchSubtab(subtabName);
-    } else if (e.target.classList.contains('team-card') && e.target.getAttribute('data-team-id')) {
-      switchTab('teams');
-    }
-  });
+  };
+
+  // Temporarily remove all existing listeners to avoid duplicates
+  appDiv.removeEventListener('click', appDiv.eventHandler);
+  appDiv.addEventListener('click', eventHandler);
+  appDiv.eventHandler = eventHandler;
+
 
   // --- Password Unlock ---
   const passwordBtn = document.getElementById('passwordBtn');
@@ -762,6 +769,17 @@ const attachEventListeners = () => {
 // --- Initialization and Real-Time Listener ---
 
 const startApp = async () => {
+  const loadingDiv = document.getElementById('loading');
+  const appDiv = document.getElementById('app');
+
+  // CRITICAL CHECK: Ensure Firebase configuration is not empty
+  if (Object.keys(firebaseConfig).length === 0) {
+      if (loadingDiv) {
+          loadingDiv.innerHTML = `<div style="color: red; padding: 2rem; font-weight: bold;">FATAL ERROR: Firebase Configuration is Missing. Cannot connect to database.</div>`;
+      }
+      return;
+  }
+  
   try {
     const app = initializeApp(firebaseConfig);
     db = getFirestore(app);
@@ -796,11 +814,14 @@ const startApp = async () => {
   } catch (e) {
     console.error("Firebase Initialization Failed:", e);
     // If Firebase fails completely, show an error on the loading screen
-    document.getElementById('loading').innerHTML = `
-        <div style="color: red; padding: 2rem; font-weight: bold;">CRITICAL ERROR: Failed to connect to the database. Please check console for details.</div>
-    `;
-    document.getElementById('loading').style.display = 'block';
-    document.getElementById('app').style.display = 'none';
+    if (loadingDiv) {
+        loadingDiv.innerHTML = `
+            <div style="color: red; padding: 2rem; font-weight: bold;">CRITICAL ERROR: Failed to connect to the database. Please check console (F12) for details.</div>
+        `;
+    }
+    // Ensure app is hidden and loading is shown if we crash here
+    if (appDiv) appDiv.style.display = 'none';
+    if (loadingDiv) loadingDiv.style.display = 'block';
   }
 };
 
