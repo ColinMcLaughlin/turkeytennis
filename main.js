@@ -6,7 +6,8 @@ import { getFirestore, doc, setDoc, getDoc, onSnapshot, setLogLevel } from "http
 // These variables are injected by the execution environment to handle authentication and configuration.
 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initialAuthToken : null;
+// FIX: Ensure correct global variable name is used to assign the token
+const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
 // Tournament Document Path (Public data accessible to all users of this app)
 const TOURNAMENT_DOC_REF = `artifacts/${appId}/public/data/tournament/tournament-state`;
