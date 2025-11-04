@@ -33,18 +33,18 @@ const INITIAL_TEAMS = [
 ];
 
 const INITIAL_SCHEDULE = [
-  { time: '1:00 PM', court: '1', team1: 'Towson X', team2: 'Siblings or Married', pool: 'A', score: '-', team1Idx: 0, team2Idx: 2 },
-  { time: '1:00 PM', court: '2', team1: 'Just Roomates', team2: 'Towson Y', pool: 'A', score: '-', team1Idx: 4, team2Idx: 5 },
-  { time: '1:00 PM', court: '3', team1: 'Where is my husband', team2: 'uWu', pool: 'B', score: '-', team1Idx: 1, team2Idx: 3 },
-  { time: '1:20 PM', court: '1', team1: 'Team Fun', team2: 'Towson Y', pool: 'AB', score: '-', team1Idx: 6, team2Idx: 5 },
-  { time: '1:20 PM', court: '2', team1: 'Towson X', team2: 'Just Roomates', pool: 'A', score: '-', team1Idx: 0, team2Idx: 4 },
-  { time: '1:20 PM', court: '3', team1: 'Team 1 Bed 1 Bath 1 Den', team2: 'uWu', pool: 'B', score: '-', team1Idx: 7, team2Idx: 3 },
-  { time: '1:40 PM', court: '1', team1: 'Siblings or Married', team2: 'Towson Y', pool: 'A', score: '-', team1Idx: 2, team2Idx: 5 },
-  { time: '1:40 PM', court: '2', team1: 'Where is my husband', team2: 'Team 1 Bed 1 Bath 1 Den', pool: 'B', score: '-', team1Idx: 1, team2Idx: 7 },
-  { time: '1:40 PM', court: '3', team1: 'Towson X', team2: 'Team Fun', pool: 'AB', score: '-', team1Idx: 0, team2Idx: 6 },
-  { time: '2:00 PM', court: '1', team1: 'Just Roomates', team2: 'Siblings or Married', pool: 'A', score: '-', team1Idx: 4, team2Idx: 2 },
-  { time: '2:00 PM', court: '2', team1: 'uWu', team2: 'Where is my husband', pool: 'B', score: '-', team1Idx: 3, team2Idx: 1 },
-  { time: '2:00 PM', court: '3', team1: 'Team Fun', team2: 'Team 1 Bed 1 Bath 1 Den', pool: 'AB', score: '-', team1Idx: 6, team2Idx: 7 }
+  { time: '1:00 PM', court: '1', team1: 'Siblings or Married', team2: 'Just Roomates', pool: 'A', score: '-', team1Idx: 2, team2Idx: 4 },
+  { time: '1:00 PM', court: '2', team1: 'Towson Y', team2: 'Team Fun', pool: 'A', score: '-', team1Idx: 5, team2Idx: 6 },
+  { time: '1:00 PM', court: '3', team1: 'Towson X', team2: 'Where is my husband', pool: 'B', score: '-', team1Idx: 0, team2Idx: 1 },
+  { time: '1:20 PM', court: '1', team1: 'Siblings or Married', team2: 'Towson Y', pool: 'A', score: '-', team1Idx: 2, team2Idx: 5 },
+  { time: '1:20 PM', court: '2', team1: 'Just Roomates', team2: 'Team Fun', pool: 'A', score: '-', team1Idx: 4, team2Idx: 6 },
+  { time: '1:20 PM', court: '3', team1: 'uWu', team2: 'Team 1 Bed 1 Bath 1 Den', pool: 'B', score: '-', team1Idx: 3, team2Idx: 7 },
+  { time: '1:40 PM', court: '1', team1: 'Siblings or Married', team2: 'Team Fun', pool: 'A', score: '-', team1Idx: 2, team2Idx: 6 },
+  { time: '1:40 PM', court: '2', team1: 'Just Roomates', team2: 'Towson Y', pool: 'A', score: '-', team1Idx: 4, team2Idx: 5 },
+  { time: '1:40 PM', court: '3', team1: 'Towson X', team2: 'uWu', pool: 'B', score: '-', team1Idx: 0, team2Idx: 3 },
+  { time: '2:00 PM', court: '1', team1: 'Where is my husband', team2: 'Team 1 Bed 1 Bath 1 Den', pool: 'B', score: '-', team1Idx: 1, team2Idx: 7 },
+  { time: '2:00 PM', court: '2', team1: 'Towson X', team2: 'Team 1 Bed 1 Bath 1 Den', pool: 'B', score: '-', team1Idx: 0, team2Idx: 7 },
+  { time: '2:00 PM', court: '3', team1: 'Where is my husband', team2: 'uWu', pool: 'B', score: '-', team1Idx: 1, team2Idx: 3 }
 ];
 
 const INITIAL_BRACKET_MATCHES = {
@@ -71,7 +71,7 @@ const INITIAL_BRACKET_MATCHES = {
 };
 
 const INITIAL_ALTERNATES = [
-  'Team Julia and Theo', 'Team Joel and Luke', 'Undisclosed', 'Team Adam and Vinny', 'Team PeeCeeTee'
+  'Team Julia and Theo', 'Team Joel and Luke', 'Undisclosed', 'Team Adam and Vinny', 'Team PeeCeeTee', 'Team Johnny and grant', 'Team Homestead', 'Team Jack','Team Ash'
 ];
 
 const CORRECT_PASSWORD = "turkey2024";
