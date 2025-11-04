@@ -22,13 +22,13 @@ const TOURNAMENT_DOC_REF = `artifacts/${appId}/public/data/tournament/tournament
 
 // --- Initial Tournament State (Used only if no data exists in Firestore) ---
 const INITIAL_TEAMS = [
-  { name: 'Towson X', players: ['Elias', 'Yoshi'], pool: 'A', description: 'Welcome Towson X' },
+  { name: 'Towson X', players: ['Elias', 'Yoshi'], pool: 'B', description: 'Welcome Towson X' },
   { name: 'Where is my husband', players: ['Brooke', 'Varidhi'], pool: 'B', description: 'Brooke is without her husband who is tall. But she should play well.' },
   { name: 'Siblings or Married', players: ['Laurel', 'Zim'], pool: 'A', description: 'Jury is still out.  Might be both' },
   { name: 'uWu', players: ['Tab', 'NoNo'], pool: 'B', description: 'Actively over thinking their match and processing the situation like anime ' },
   { name: 'Just Roomates', players: ['Moose', 'Austin'], pool: 'A', description: 'Just roomates I swear' },
   { name: 'Towson Y', players: ['Dan', 'Sara'], pool: 'A', description: 'ugh, another townson.' },
-  { name: 'Team Fun', players: ['Colin', 'Cait'], pool: 'B', description: 'Should play good .' },
+  { name: 'Team Fun', players: ['Colin', 'Cait'], pool: 'A', description: 'Should play good .' },
   { name: 'Team 1 Bed 1 Bath 1 Den', players: ['Dan FB', 'Jess'], pool: 'B', description: 'will be good unless kaboom' }
 ];
 
