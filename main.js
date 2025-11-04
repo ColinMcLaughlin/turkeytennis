@@ -1,5 +1,6 @@
-import './style.css'
+// import './style.css' // Assuming this is linked in index.html
 
+// Global Data
 const teams = [
   {
     name: 'Towson X',
@@ -17,7 +18,7 @@ const teams = [
     name: 'Siblings or Married',
     players: ['Laurel', 'Zim'],
     pool: 'A',
-    description: 'Jury is still out.  Might be both'
+    description: 'Jury is still out.  Might be both'
   },
   {
     name: 'uWu',
@@ -110,6 +111,46 @@ let bracketMatches = {
 }
 
 let bracketPlayActive = false
+let passwordUnlocked = false
+
+// --- Template Content Generation ---
+
+const welcomeDescriptionHTML = `
+  <div class="welcome-section">
+    <h2>Welcome to the Turkey Tennis Doubles Invitational! 🦃🎾</h2>
+    <p>We're thrilled to host another year of friendly (and sometimes fierce) competition. Use the tabs above to view teams, see the schedule, and submit scores.</p>
+    <p>Good luck to all the teams!</p>
+  </div>
+`
+
+const teamsHTML = teams.map((team, idx) => `
+  <div class="team-card" data-team-id="${idx}">
+    <h3>${team.name}</h3>
+    <ul>
+      <li>${team.players[0]}</li>
+      <li>${team.players[1]}</li>
+    </ul>
+  </div>
+`).join('')
+
+const alternatesHTML = alternates.map(alt => `<li>${alt}</li>`).join('')
+
+const teamOptions = teams.map((team, idx) => `<option value="${idx}">${team.name}</option>`).join('')
+
+const teamDetailsHTML = teams.map((team, idx) => `
+  <div class="team-detail">
+    <h2>${team.name}</h2>
+    <div class="team-players">
+      <strong>Players:</strong> ${team.players.join(' & ')}
+    </div>
+    <div class="team-pool">
+      <strong>Pool:</strong> ${team.pool}
+    </div>
+    <p class="team-description">${team.description}</p>
+  </div>
+`).join('')
+
+// --- Logic Functions ---
 
 const getRecords = () => {
   const records = {}
@@ -140,28 +181,30 @@ const generatePoolPlayHTML = () => {
     <div class="pools-container">
       <div class="pool">
         <h3>Pool Play Schedule & Scores</h3>
-        <table class="standings-table">
-          <thead>
-            <tr>
-              <th>Time</th>
-              <th>Court</th>
-              <th>Team 1</th>
-              <th>Team 2</th>
-              <th>Score</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${matchSchedule.map((match, idx) => `
+        <div class="table-responsive">
+          <table class="standings-table">
+            <thead>
               <tr>
-                <td>${match.time}</td>
-                <td>${match.court}</td>
-                <td>${match.team1}</td>
-                <td>${match.team2}</td>
-                <td class="score-cell" data-match-idx="${idx}">${match.score}</td>
+                <th>Time</th>
+                <th>Court</th>
+                <th>Team 1</th>
+                <th>Team 2</th>
+                <th>Score</th>
               </tr>
-            `).join('')}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              ${matchSchedule.map((match, idx) => `
+                <tr>
+                  <td>${match.time}</td>
+                  <td>${match.court}</td>
+                  <td>${match.team1}</td>
+                  <td>${match.team2}</td>
+                  <td class="score-cell" data-match-idx="${idx}">${match.score}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   `
@@ -184,84 +227,78 @@ const generateStandingsHTML = () => {
     <div class="pools-container">
       <div class="pool">
         <h3>Pool A Standings</h3>
-        <table class="standings-table">
-          <thead>
-            <tr>
-              <th>Rank</th>
-              <th>Team</th>
-              <th>Record</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${poolATeams.map((team, idx) => `
+        <div class="table-responsive">
+          <table class="standings-table">
+            <thead>
               <tr>
-                <td>${idx + 1}</td>
-                <td>${team.name}</td>
-                <td>${team.record.wins}-${team.record.losses}</td>
+                <th>Rank</th>
+                <th>Team</th>
+                <th>Record</th>
               </tr>
-            `).join('')}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              ${poolATeams.map((team, idx) => `
+                <tr>
+                  <td>${idx + 1}</td>
+                  <td>${team.name}</td>
+                  <td>${team.record.wins}-${team.record.losses}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
       </div>
       <div class="pool">
         <h3>Pool B Standings</h3>
-        <table class="standings-table">
-          <thead>
-            <tr>
-              <th>Rank</th>
-              <th>Team</th>
-              <th>Record</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${poolBTeams.map((team, idx) => `
+        <div class="table-responsive">
+          <table class="standings-table">
+            <thead>
               <tr>
-                <td>${idx + 1}</td>
-                <td>${team.name}</td>
-                <td>${team.record.wins}-${team.record.losses}</td>
+                <th>Rank</th>
+                <th>Team</th>
+                <th>Record</th>
               </tr>
-            `).join('')}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              ${poolBTeams.map((team, idx) => `
+                <tr>
+                  <td>${idx + 1}</td>
+                  <td>${team.name}</td>
+                  <td>${team.record.wins}-${team.record.losses}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   `
 }
 
 const generateBracketsHTML = () => {
+  const renderMatch = (match) => `
+    <div class="bracket-match">
+      <div class="bracket-team">${match.team1}</div>
+      <div class="bracket-team">${match.team2}</div>
+      <div class="bracket-score">${match.score}</div>
+    </div>
+  `
+  
   const bracketHTML = `
     <div class="bracket-container">
       <div class="bracket-round">
         <h3>Quarterfinals</h3>
-        ${bracketMatches.quarterfinals.map(match => `
-          <div class="bracket-match">
-            <div class="bracket-team">${match.team1}</div>
-            <div class="bracket-team">${match.team2}</div>
-            <div class="bracket-score">${match.score}</div>
-          </div>
-        `).join('')}
+        ${bracketMatches.quarterfinals.map(renderMatch).join('')}
       </div>
       
       <div class="bracket-round">
         <h3>Semifinals</h3>
-        ${bracketMatches.semifinals.map(match => `
-          <div class="bracket-match">
-            <div class="bracket-team">${match.team1}</div>
-            <div class="bracket-team">${match.team2}</div>
-            <div class="bracket-score">${match.score}</div>
-          </div>
-        `).join('')}
+        ${bracketMatches.semifinals.map(renderMatch).join('')}
       </div>
       
       <div class="bracket-round">
         <h3>Finals</h3>
-        ${bracketMatches.finals.map(match => `
-          <div class="bracket-match">
-            <div class="bracket-team">${match.team1}</div>
-            <div class="bracket-team">${match.team2}</div>
-            <div class="bracket-score">${match.score}</div>
-          </div>
-        `).join('')}
+        ${bracketMatches.finals.map(renderMatch).join('')}
       </div>
       
       <div class="bracket-round">
@@ -277,24 +314,12 @@ const generateBracketsHTML = () => {
     <div class="bracket-container">
       <div class="bracket-round">
         <h3>Consolation Semifinals</h3>
-        ${bracketMatches.consolationSemis.map(match => `
-          <div class="bracket-match">
-            <div class="bracket-team">${match.team1}</div>
-            <div class="bracket-team">${match.team2}</div>
-            <div class="bracket-score">${match.score}</div>
-          </div>
-        `).join('')}
+        ${bracketMatches.consolationSemis.map(renderMatch).join('')}
       </div>
       
       <div class="bracket-round">
         <h3>Consolation Finals</h3>
-        ${bracketMatches.consolationFinals.map(match => `
-          <div class="bracket-match">
-            <div class="bracket-team">${match.team1}</div>
-            <div class="bracket-team">${match.team2}</div>
-            <div class="bracket-score">${match.score}</div>
-          </div>
-        `).join('')}
+        ${bracketMatches.consolationFinals.map(renderMatch).join('')}
       </div>
       
       <div class="bracket-round">
@@ -316,33 +341,7 @@ const generateBracketsHTML = () => {
   `
 }
 
-const teamsHTML = teams.map((team, idx) => `
-  <div class="team-card" data-team-id="${idx}">
-    <h3>${team.name}</h3>
-    <ul>
-      <li>${team.players[0]}</li>
-      <li>${team.players[1]}</li>
-    </ul>
-  </div>
-`).join('')
-
-const alternatesHTML = alternates.map(alt => `<li>${alt}</li>`).join('')
-
-const teamOptions = teams.map((team, idx) => `<option value="${idx}">${team.name}</option>`).join('')
-
-const teamDetailsHTML = teams.map((team, idx) => `
-  <div class="team-detail">
-    <h2>${team.name}</h2>
-    <div class="team-players">
-      <strong>Players:</strong> ${team.players.join(' & ')}
-    </div>
-    <div class="team-pool">
-      <strong>Pool:</strong> ${team.pool}
-    </div>
-    <p class="team-description">${team.description}</p>
-  </div>
-`).join('')
-
+// --- Main Template Render ---
 document.querySelector('#app').innerHTML = `
   <div>
     <h1>Turkey Tennis Doubles Invitational</h1>
@@ -354,6 +353,9 @@ document.querySelector('#app').innerHTML = `
     </div>
     <div class="tab-content">
       <div id="home" class="tab-pane active">
+        <!-- WELCOME DESCRIPTION INSERTED HERE -->
+        ${welcomeDescriptionHTML}
+        
         <div class="teams-section">
           <h2>Participating Teams</h2>
           <div class="teams-grid">
@@ -374,14 +376,16 @@ document.querySelector('#app').innerHTML = `
           <button class="subtab-button" data-subtab="standings">Standings</button>
           <button class="subtab-button" data-subtab="brackets">Brackets</button>
         </div>
-        <div id="pool-play" class="subtab-pane active">
-          ${generatePoolPlayHTML()}
-        </div>
-        <div id="standings" class="subtab-pane">
-          ${generateStandingsHTML()}
-        </div>
-        <div id="brackets" class="subtab-pane">
-          ${generateBracketsHTML()}
+        <div class="subtab-content">
+          <div id="pool-play" class="subtab-pane active">
+            ${generatePoolPlayHTML()}
+          </div>
+          <div id="standings" class="subtab-pane">
+            ${generateStandingsHTML()}
+          </div>
+          <div id="brackets" class="subtab-pane">
+            ${generateBracketsHTML()}
+          </div>
         </div>
       </div>
       <div id="scores" class="tab-pane">
@@ -395,7 +399,7 @@ document.querySelector('#app').innerHTML = `
           <div id="password-result" class="result"></div>
         </div>
         <div class="score-form" id="score-form" style="display: none;">
-          <div id="pool-play-section">
+          <div id="pool-play-section" style="display: ${bracketPlayActive ? 'none' : 'block'};">
             <h3>Pool Play Scores</h3>
             <div class="form-group">
               <label for="match-select">Select Match:</label>
@@ -414,11 +418,11 @@ document.querySelector('#app').innerHTML = `
               <label for="score2">Team 2 Score:</label>
               <input type="number" id="score2" min="0" placeholder="0">
             </div>
-            <button id="submitBtn" class="submit-btn">Submit Score</button>
+            <button id="submitBtn" class="submit-btn">Submit Pool Score</button>
             <button id="concludeBtn" class="submit-btn" style="margin-top: 1rem; background-color: #28a745;">Conclude Pool Play & Start Bracket</button>
           </div>
           
-          <div id="bracket-play-section" style="display: none;">
+          <div id="bracket-play-section" style="display: ${bracketPlayActive ? 'block' : 'none'};">
             <h3>Bracket Play Scores</h3>
             <div class="form-group">
               <label for="bracket-match-select">Select Bracket Match:</label>
@@ -451,28 +455,7 @@ document.querySelector('#app').innerHTML = `
   </div>
 `
 
-let passwordUnlocked = false
-
-document.getElementById('passwordBtn').addEventListener('click', () => {
-  const password = document.getElementById('password').value
-  const resultDiv = document.getElementById('password-result')
-
-  if (password === CORRECT_PASSWORD) {
-    passwordUnlocked = true
-    document.getElementById('password-section').style.display = 'none'
-    document.getElementById('score-form').style.display = 'block'
-    resultDiv.textContent = ''
-  } else {
-    resultDiv.textContent = 'Incorrect password'
-    resultDiv.className = 'result error'
-  }
-})
-
-document.getElementById('password').addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') {
-    document.getElementById('passwordBtn').click()
-  }
-})
+// --- Event Handlers and Helpers ---
 
 const switchTab = (tabName) => {
   document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'))
@@ -486,9 +469,13 @@ const switchSubtab = (subtabName) => {
   document.querySelectorAll('.subtab-button').forEach(btn => btn.classList.remove('active'))
   document.querySelectorAll('.subtab-pane').forEach(pane => pane.classList.remove('active'))
 
-  document.querySelector(`[data-subtab="${subtabName}"]`).classList.add('active')
-  document.getElementById(subtabName).classList.add('active')
+  const currentTabButton = document.querySelector(`[data-subtab="${subtabName}"]`);
+  if (currentTabButton) currentTabButton.classList.add('active');
+  
+  const currentTabPane = document.getElementById(subtabName);
+  if (currentTabPane) currentTabPane.classList.add('active');
 
+  // Re-render dynamic content on tab switch
   if (subtabName === 'standings') {
     document.getElementById('standings').innerHTML = generateStandingsHTML()
   } else if (subtabName === 'pool-play') {
@@ -498,312 +485,343 @@ const switchSubtab = (subtabName) => {
   }
 }
 
-document.querySelectorAll('.tab-button').forEach(button => {
-  button.addEventListener('click', () => {
-    const tabName = button.getAttribute('data-tab')
-    switchTab(tabName)
+const updateBracketMatchSelect = () => {
+  const select = document.getElementById('bracket-match-select')
+  if (!select) return; // Guard
+  select.innerHTML = '<option value="">Choose a bracket match...</option>'
+  
+  const sections = [
+    { round: 'qf', matches: bracketMatches.quarterfinals, prefix: 'Quarterfinal' },
+    { round: 'sf', matches: bracketMatches.semifinals, prefix: 'Semifinal' },
+    { round: 'f', matches: bracketMatches.finals, prefix: 'Finals' },
+    { round: 'csf', matches: bracketMatches.consolationSemis, prefix: 'Consolation Semifinal' },
+    { round: 'cf', matches: bracketMatches.consolationFinals, prefix: 'Consolation Finals' }
+  ];
+
+  sections.forEach(({ round, matches, prefix }) => {
+    matches.forEach((match, idx) => {
+      // Check if match teams are finalized and score is not submitted
+      const isPlaceholder = match.team1.includes('Pool') || match.team1.includes('Winner') || match.team1.includes('Loser');
+      
+      if (match.score === '-' && !isPlaceholder) {
+        let name = `${prefix} ${round !== 'f' && round !== 'cf' ? idx + 1 : ''}`.trim();
+        select.innerHTML += `<option value="${round}-${idx}">${name}: ${match.team1} vs ${match.team2}</option>`
+      }
+    })
   })
-})
+}
 
-document.querySelectorAll('.subtab-button').forEach(button => {
-  button.addEventListener('click', () => {
-    const subtabName = button.getAttribute('data-subtab')
-    switchSubtab(subtabName)
+// Event Listeners initialization
+document.addEventListener('DOMContentLoaded', () => {
+  // Ensure correct subtab is rendered on load
+  switchSubtab('pool-play');
+  
+  // Tab Switching
+  document.querySelectorAll('.tab-button').forEach(button => {
+    button.addEventListener('click', () => {
+      const tabName = button.getAttribute('data-tab')
+      switchTab(tabName)
+    })
   })
-})
 
-document.querySelectorAll('.team-card').forEach(card => {
-  card.addEventListener('click', () => {
-    switchTab('teams')
+  // Subtab Switching
+  document.querySelectorAll('.subtab-button').forEach(button => {
+    button.addEventListener('click', () => {
+      const subtabName = button.getAttribute('data-subtab')
+      switchSubtab(subtabName)
+    })
   })
-})
 
-document.getElementById('submitBtn').addEventListener('click', () => {
-  if (!passwordUnlocked) {
-    document.getElementById('result').textContent = 'Please enter password first'
-    document.getElementById('result').className = 'result error'
-    return
-  }
+  // Team Card Click
+  document.querySelectorAll('.team-card').forEach(card => {
+    card.addEventListener('click', () => {
+      switchTab('teams')
+    })
+  })
 
-  const matchIdx = parseInt(document.getElementById('match-select').value)
-  const score1 = parseInt(document.getElementById('score1').value)
-  const score2 = parseInt(document.getElementById('score2').value)
+  // Password Unlock
+  document.getElementById('passwordBtn').addEventListener('click', () => {
+    const password = document.getElementById('password').value
+    const resultDiv = document.getElementById('password-result')
 
-  const resultDiv = document.getElementById('result')
+    if (password === CORRECT_PASSWORD) {
+      passwordUnlocked = true
+      document.getElementById('password-section').style.display = 'none'
+      document.getElementById('score-form').style.display = 'block'
+      document.getElementById('password').value = ''
+      
+      if (bracketPlayActive) {
+        document.getElementById('pool-play-section').style.display = 'none';
+        document.getElementById('bracket-play-section').style.display = 'block';
+        updateBracketMatchSelect();
+      } else {
+        document.getElementById('pool-play-section').style.display = 'block';
+        document.getElementById('bracket-play-section').style.display = 'none';
+      }
+      
+      resultDiv.textContent = 'Unlocked!'
+      resultDiv.className = 'result success'
+    } else {
+      resultDiv.textContent = 'Incorrect password'
+      resultDiv.className = 'result error'
+    }
+  })
 
-  if (isNaN(matchIdx) || matchIdx < 0) {
-    resultDiv.textContent = 'Please select a match'
-    resultDiv.className = 'result error'
-    return
-  }
+  // Pool Play Score Submission
+  document.getElementById('submitBtn').addEventListener('click', () => {
+    if (!passwordUnlocked) {
+      document.getElementById('result').textContent = 'Please enter password first'
+      document.getElementById('result').className = 'result error'
+      return
+    }
 
-  if (isNaN(score1) || isNaN(score2)) {
-    resultDiv.textContent = 'Please enter valid scores'
-    resultDiv.className = 'result error'
-    return
-  }
+    const matchIdx = parseInt(document.getElementById('match-select').value)
+    const score1 = parseInt(document.getElementById('score1').value)
+    const score2 = parseInt(document.getElementById('score2').value)
 
-  const match = matchSchedule[matchIdx]
-  let winner
+    const resultDiv = document.getElementById('result')
 
-  if (score1 > score2) {
-    winner = match.team1
-  } else if (score2 > score1) {
-    winner = match.team2
-  } else {
-    resultDiv.textContent = `${match.team1} ${score1} - ${score2} ${match.team2} (Tied)`
-    resultDiv.className = 'result tie'
+    if (isNaN(matchIdx) || matchIdx < 0) {
+      resultDiv.textContent = 'Please select a match'
+      resultDiv.className = 'result error'
+      return
+    }
+
+    if (isNaN(score1) || isNaN(score2)) {
+      resultDiv.textContent = 'Please enter valid scores'
+      resultDiv.className = 'result error'
+      return
+    }
+    
+    // Check if score is already submitted
+    if (matchSchedule[matchIdx].score !== '-') {
+        resultDiv.textContent = 'Score already submitted for this match.'
+        resultDiv.className = 'result error'
+        return
+    }
+
+    const match = matchSchedule[matchIdx]
+    let winner
+
+    if (score1 > score2) {
+      winner = match.team1
+    } else if (score2 > score1) {
+      winner = match.team2
+    } else {
+      resultDiv.textContent = `${match.team1} ${score1} - ${score2} ${match.team2} (Tied)`
+      resultDiv.className = 'result tie'
+      document.getElementById('match-select').value = ''
+      document.getElementById('score1').value = ''
+      document.getElementById('score2').value = ''
+      match.score = `${score1} - ${score2}` // Still record tie for history
+      switchSubtab('pool-play'); // Update view
+      return
+    }
+
+    match.score = `${score1} - ${score2}`
+
+    resultDiv.textContent = `${match.team1} ${score1} - ${score2} ${match.team2} | Winner: ${winner}`
+    resultDiv.className = 'result success'
+
     document.getElementById('match-select').value = ''
     document.getElementById('score1').value = ''
     document.getElementById('score2').value = ''
-    return
-  }
 
-  match.score = `${score1} - ${score2}`
-
-  resultDiv.textContent = `${match.team1} ${score1} - ${score2} ${match.team2} | Winner: ${winner}`
-  resultDiv.className = 'result success'
-
-  document.getElementById('match-select').value = ''
-  document.getElementById('score1').value = ''
-  document.getElementById('score2').value = ''
-
-  switchSubtab('standings')
-})
-
-document.getElementById('concludeBtn').addEventListener('click', () => {
-  if (!confirm('Are you sure you want to conclude pool play and start bracket play? This will seed the bracket based on current standings.')) {
-    return
-  }
-  
-  const records = getRecords()
-  
-  const poolATeams = teams.filter(t => t.pool === 'A').map(team => {
-    const teamIdx = teams.indexOf(team)
-    return { ...team, teamIdx, record: records[teamIdx] }
-  }).sort((a, b) => b.record.wins - a.record.wins)
-  
-  const poolBTeams = teams.filter(t => t.pool === 'B').map(team => {
-    const teamIdx = teams.indexOf(team)
-    return { ...team, teamIdx, record: records[teamIdx] }
-  }).sort((a, b) => b.record.wins - a.record.wins)
-  
-  // Seed the bracket
-  bracketMatches.quarterfinals[0].team1 = poolATeams[0].name
-  bracketMatches.quarterfinals[0].team2 = poolBTeams[3].name
-  
-  bracketMatches.quarterfinals[1].team1 = poolBTeams[0].name
-  bracketMatches.quarterfinals[1].team2 = poolATeams[3].name
-  
-  bracketMatches.quarterfinals[2].team1 = poolATeams[1].name
-  bracketMatches.quarterfinals[2].team2 = poolBTeams[2].name
-  
-  bracketMatches.quarterfinals[3].team1 = poolBTeams[1].name
-  bracketMatches.quarterfinals[3].team2 = poolATeams[2].name
-  
-  bracketPlayActive = true
-  
-  document.getElementById('pool-play-section').style.display = 'none'
-  document.getElementById('bracket-play-section').style.display = 'block'
-  
-  updateBracketMatchSelect()
-  
-  document.getElementById('result').textContent = 'Pool play concluded! Bracket play has begun.'
-  document.getElementById('result').className = 'result success'
-  
-  switchSubtab('brackets')
-})
-
-const updateBracketMatchSelect = () => {
-  const select = document.getElementById('bracket-match-select')
-  select.innerHTML = '<option value="">Choose a bracket match...</option>'
-  
-  // Add available quarterfinal matches
-  bracketMatches.quarterfinals.forEach((match, idx) => {
-    if (match.score === '-') {
-      select.innerHTML += `<option value="qf-${idx}">Quarterfinal ${idx + 1}: ${match.team1} vs ${match.team2}</option>`
-    }
+    switchSubtab('pool-play') // Update view to show new score
   })
-  
-  // Add available semifinal matches
-  bracketMatches.semifinals.forEach((match, idx) => {
-    if (match.score === '-' && match.team1 !== 'Winner QF1' && match.team1 !== 'Winner QF2' && match.team1 !== 'Winner QF3' && match.team1 !== 'Winner QF4') {
-      select.innerHTML += `<option value="sf-${idx}">Semifinal ${idx + 1}: ${match.team1} vs ${match.team2}</option>`
-    }
-  })
-  
-  // Add finals match
-  if (bracketMatches.finals[0].score === '-' && bracketMatches.finals[0].team1 !== 'Winner SF1' && bracketMatches.finals[0].team1 !== 'Winner SF2') {
-    select.innerHTML += `<option value="f-0">Finals: ${bracketMatches.finals[0].team1} vs ${bracketMatches.finals[0].team2}</option>`
-  }
-  
-  // Add consolation matches
-  bracketMatches.consolationSemis.forEach((match, idx) => {
-    if (match.score === '-' && match.team1 !== 'Loser QF1' && match.team1 !== 'Loser QF2' && match.team1 !== 'Loser QF3' && match.team1 !== 'Loser QF4') {
-      select.innerHTML += `<option value="csf-${idx}">Consolation Semifinal ${idx + 1}: ${match.team1} vs ${match.team2}</option>`
-    }
-  })
-  
-  if (bracketMatches.consolationFinals[0].score === '-' && bracketMatches.consolationFinals[0].team1 !== 'Winner CSF1' && bracketMatches.consolationFinals[0].team1 !== 'Winner CSF2') {
-    select.innerHTML += `<option value="cf-0">Consolation Finals: ${bracketMatches.consolationFinals[0].team1} vs ${bracketMatches.consolationFinals[0].team2}</option>`
-  }
-}
 
-document.getElementById('submitBracketBtn').addEventListener('click', () => {
-  const matchId = document.getElementById('bracket-match-select').value
-  const score1 = parseInt(document.getElementById('bracket-score1').value)
-  const score2 = parseInt(document.getElementById('bracket-score2').value)
-  const resultDiv = document.getElementById('result')
-  
-  if (!matchId) {
-    resultDiv.textContent = 'Please select a match'
-    resultDiv.className = 'result error'
-    return
-  }
-  
-  if (isNaN(score1) || isNaN(score2)) {
-    resultDiv.textContent = 'Please enter valid scores'
-    resultDiv.className = 'result error'
-    return
-  }
-  
-  if (score1 === score2) {
-    resultDiv.textContent = 'Ties are not allowed in bracket play'
-    resultDiv.className = 'result error'
-    return
-  }
-  
-  const [round, idx] = matchId.split('-')
-  let match, winner, loser
-  
-  if (round === 'qf') {
-    match = bracketMatches.quarterfinals[parseInt(idx)]
-    winner = score1 > score2 ? match.team1 : match.team2
-    loser = score1 > score2 ? match.team2 : match.team1
-    match.score
-    match.score = `${score1} - ${score2}`
-    match.winner = winner
+  // Conclude Pool Play Button
+  document.getElementById('concludeBtn').addEventListener('click', () => {
+    // NOTE: Removed window.confirm() as per instructions.
+    // In a real app, this would be a custom modal. Here, we just proceed.
     
-    // Update semifinals
-    if (idx === '0') {
-      bracketMatches.semifinals[0].team1 = winner
-      bracketMatches.consolationSemis[0].team1 = loser
-    } else if (idx === '1') {
-      bracketMatches.semifinals[0].team2 = winner
-      bracketMatches.consolationSemis[0].team2 = loser
-    } else if (idx === '2') {
-      bracketMatches.semifinals[1].team1 = winner
-      bracketMatches.consolationSemis[1].team1 = loser
-    } else if (idx === '3') {
-      bracketMatches.semifinals[1].team2 = winner
-      bracketMatches.consolationSemis[1].team2 = loser
-    }
-  } else if (round === 'sf') {
-    match = bracketMatches.semifinals[parseInt(idx)]
-    winner = score1 > score2 ? match.team1 : match.team2
-    match.score = `${score1} - ${score2}`
-    match.winner = winner
+    const records = getRecords()
     
-    // Update finals
-    if (idx === '0') {
-      bracketMatches.finals[0].team1 = winner
-    } else if (idx === '1') {
-      bracketMatches.finals[0].team2 = winner
-    }
-  } else if (round === 'f') {
-    match = bracketMatches.finals[0]
-    winner = score1 > score2 ? match.team1 : match.team2
-    match.score = `${score1} - ${score2}`
-    match.winner = winner
-  } else if (round === 'csf') {
-    match = bracketMatches.consolationSemis[parseInt(idx)]
-    winner = score1 > score2 ? match.team1 : match.team2
-    match.score = `${score1} - ${score2}`
-    match.winner = winner
+    // Sort teams by record (wins descending)
+    const poolATeams = teams.filter(t => t.pool === 'A').map(team => {
+      const teamIdx = teams.indexOf(team)
+      return { ...team, teamIdx, record: records[teamIdx] }
+    }).sort((a, b) => b.record.wins - a.record.wins)
     
-    // Update consolation finals
-    if (idx === '0') {
-      bracketMatches.consolationFinals[0].team1 = winner
-    } else if (idx === '1') {
-      bracketMatches.consolationFinals[0].team2 = winner
+    const poolBTeams = teams.filter(t => t.pool === 'B').map(team => {
+      const teamIdx = teams.indexOf(team)
+      return { ...team, teamIdx, record: records[teamIdx] }
+    }).sort((a, b) => b.record.wins - a.record.wins)
+    
+    if (poolATeams.some(t => t.record.wins + t.record.losses < 3) || 
+        poolBTeams.some(t => t.record.wins + t.record.losses < 3)) {
+         document.getElementById('result').textContent = 'Warning: Not all pool play matches have been scored. Proceeding anyway.'
+         document.getElementById('result').className = 'result tie'
+    } else {
+         document.getElementById('result').textContent = 'Pool play concluded! Bracket play has begun.'
+         document.getElementById('result').className = 'result success'
     }
-  } else if (round === 'cf') {
-    match = bracketMatches.consolationFinals[0]
-    winner = score1 > score2 ? match.team1 : match.team2
-    match.score = `${score1} - ${score2}`
-    match.winner = winner
-  }
-  
-  resultDiv.textContent = `Score submitted: ${match.team1} ${score1} - ${score2} ${match.team2} | Winner: ${winner}`
-  resultDiv.className = 'result success'
-  
-  document.getElementById('bracket-match-select').value = ''
-  document.getElementById('bracket-score1').value = ''
-  document.getElementById('bracket-score2').value = ''
-  
-  updateBracketMatchSelect()
-  switchSubtab('brackets')
-})
 
-document.getElementById('resetBtn').addEventListener('click', () => {
-  if (!confirm('Are you sure you want to reset the entire tournament? This will clear all scores and bracket data.')) {
-    return
-  }
-  
-  // Reset all pool play scores
-  matchSchedule.forEach(match => {
-    match.score = '-'
+    // Seed the bracket (Top 4 from each pool)
+    bracketMatches.quarterfinals[0].team1 = poolATeams[0].name
+    bracketMatches.quarterfinals[0].team2 = poolBTeams[3].name
+    
+    bracketMatches.quarterfinals[1].team1 = poolBTeams[0].name
+    bracketMatches.quarterfinals[1].team2 = poolATeams[3].name
+    
+    bracketMatches.quarterfinals[2].team1 = poolATeams[1].name
+    bracketMatches.quarterfinals[2].team2 = poolBTeams[2].name
+    
+    bracketMatches.quarterfinals[3].team1 = poolBTeams[1].name
+    bracketMatches.quarterfinals[3].team2 = poolATeams[2].name
+    
+    bracketPlayActive = true
+    
+    document.getElementById('pool-play-section').style.display = 'none'
+    document.getElementById('bracket-play-section').style.display = 'block'
+    
+    updateBracketMatchSelect()
+    
+    switchSubtab('brackets')
   })
   
-  // Reset all bracket matches
-  bracketMatches.quarterfinals.forEach(match => {
-    match.score = '-'
-    match.winner = null
+  // Bracket Score Submission
+  document.getElementById('submitBracketBtn').addEventListener('click', () => {
+    const matchId = document.getElementById('bracket-match-select').value
+    const score1 = parseInt(document.getElementById('bracket-score1').value)
+    const score2 = parseInt(document.getElementById('bracket-score2').value)
+    const resultDiv = document.getElementById('result')
+    
+    if (!matchId) {
+      resultDiv.textContent = 'Please select a match'
+      resultDiv.className = 'result error'
+      return
+    }
+    
+    if (isNaN(score1) || isNaN(score2)) {
+      resultDiv.textContent = 'Please enter valid scores'
+      resultDiv.className = 'result error'
+      return
+    }
+    
+    if (score1 === score2) {
+      resultDiv.textContent = 'Ties are not allowed in bracket play'
+      resultDiv.className = 'result error'
+      return
+    }
+    
+    const [round, idxStr] = matchId.split('-')
+    const idx = parseInt(idxStr);
+    let match, winner, loser
+    
+    // Helper to update match and successors
+    const updateMatch = (matchArray, index) => {
+      match = matchArray[index];
+      winner = score1 > score2 ? match.team1 : match.team2;
+      loser = score1 > score2 ? match.team2 : match.team1;
+      match.score = `${score1} - ${score2}`;
+      match.winner = winner;
+      
+      resultDiv.textContent = `Score submitted: ${match.team1} ${score1} - ${score2} ${match.team2} | Winner: ${winner}`
+      resultDiv.className = 'result success'
+    }
+
+    if (round === 'qf') {
+      updateMatch(bracketMatches.quarterfinals, idx);
+      if (idx === 0) {
+        bracketMatches.semifinals[0].team1 = winner;
+        bracketMatches.consolationSemis[0].team1 = loser;
+      } else if (idx === 1) {
+        bracketMatches.semifinals[0].team2 = winner;
+        bracketMatches.consolationSemis[0].team2 = loser;
+      } else if (idx === 2) {
+        bracketMatches.semifinals[1].team1 = winner;
+        bracketMatches.consolationSemis[1].team1 = loser;
+      } else if (idx === 3) {
+        bracketMatches.semifinals[1].team2 = winner;
+        bracketMatches.consolationSemis[1].team2 = loser;
+      }
+    } else if (round === 'sf') {
+      updateMatch(bracketMatches.semifinals, idx);
+      if (idx === 0) {
+        bracketMatches.finals[0].team1 = winner;
+      } else if (idx === 1) {
+        bracketMatches.finals[0].team2 = winner;
+      }
+    } else if (round === 'f') {
+      updateMatch(bracketMatches.finals, idx);
+      // Champion logic done by reading match.winner
+    } else if (round === 'csf') {
+      updateMatch(bracketMatches.consolationSemis, idx);
+      if (idx === 0) {
+        bracketMatches.consolationFinals[0].team1 = winner;
+      } else if (idx === 1) {
+        bracketMatches.consolationFinals[0].team2 = winner;
+      }
+    } else if (round === 'cf') {
+      updateMatch(bracketMatches.consolationFinals, idx);
+      // 5th Place logic done by reading match.winner
+    }
+    
+    document.getElementById('bracket-match-select').value = ''
+    document.getElementById('bracket-score1').value = ''
+    document.getElementById('bracket-score2').value = ''
+    
+    updateBracketMatchSelect()
+    switchSubtab('brackets')
   })
-  bracketMatches.quarterfinals[0].team1 = 'Pool A 1st'
-  bracketMatches.quarterfinals[0].team2 = 'Pool B 4th'
-  bracketMatches.quarterfinals[1].team1 = 'Pool B 1st'
-  bracketMatches.quarterfinals[1].team2 = 'Pool A 4th'
-  bracketMatches.quarterfinals[2].team1 = 'Pool A 2nd'
-  bracketMatches.quarterfinals[2].team2 = 'Pool B 3rd'
-  bracketMatches.quarterfinals[3].team1 = 'Pool B 2nd'
-  bracketMatches.quarterfinals[3].team2 = 'Pool A 3rd'
   
-  bracketMatches.semifinals.forEach(match => {
-    match.score = '-'
-    match.winner = null
+  // Reset Tournament Button
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    // NOTE: Removed window.confirm() as per instructions.
+    // In a real app, this would be a custom modal. Here, we just reset.
+
+    // Reset all pool play scores
+    matchSchedule.forEach(match => {
+      match.score = '-'
+    })
+    
+    // Reset all bracket matches
+    const resetBracketMatch = (match) => {
+      match.score = '-'
+      match.winner = null
+    }
+
+    bracketMatches.quarterfinals.forEach(resetBracketMatch)
+    bracketMatches.quarterfinals[0].team1 = 'Pool A 1st'
+    bracketMatches.quarterfinals[0].team2 = 'Pool B 4th'
+    bracketMatches.quarterfinals[1].team1 = 'Pool B 1st'
+    bracketMatches.quarterfinals[1].team2 = 'Pool A 4th'
+    bracketMatches.quarterfinals[2].team1 = 'Pool A 2nd'
+    bracketMatches.quarterfinals[2].team2 = 'Pool B 3rd'
+    bracketMatches.quarterfinals[3].team1 = 'Pool B 2nd'
+    bracketMatches.quarterfinals[3].team2 = 'Pool A 3rd'
+    
+    bracketMatches.semifinals.forEach(resetBracketMatch)
+    bracketMatches.semifinals[0].team1 = 'Winner QF1'
+    bracketMatches.semifinals[0].team2 = 'Winner QF2'
+    bracketMatches.semifinals[1].team1 = 'Winner QF3'
+    bracketMatches.semifinals[1].team2 = 'Winner QF4'
+    
+    bracketMatches.finals[0].score = '-'
+    bracketMatches.finals[0].winner = null
+    bracketMatches.finals[0].team1 = 'Winner SF1'
+    bracketMatches.finals[0].team2 = 'Winner SF2'
+    
+    bracketMatches.consolationSemis.forEach(resetBracketMatch)
+    bracketMatches.consolationSemis[0].team1 = 'Loser QF1'
+    bracketMatches.consolationSemis[0].team2 = 'Loser QF2'
+    bracketMatches.consolationSemis[1].team1 = 'Loser QF3'
+    bracketMatches.consolationSemis[1].team2 = 'Loser QF4'
+    
+    bracketMatches.consolationFinals[0].score = '-'
+    bracketMatches.consolationFinals[0].winner = null
+    bracketMatches.consolationFinals[0].team1 = 'Winner CSF1'
+    bracketMatches.consolationFinals[0].team2 = 'Winner CSF2'
+    
+    bracketPlayActive = false
+    
+    document.getElementById('pool-play-section').style.display = 'block'
+    document.getElementById('bracket-play-section').style.display = 'none'
+    
+    document.getElementById('result').textContent = 'Tournament has been reset!'
+    document.getElementById('result').className = 'result error'
+    
+    switchSubtab('pool-play')
   })
-  bracketMatches.semifinals[0].team1 = 'Winner QF1'
-  bracketMatches.semifinals[0].team2 = 'Winner QF2'
-  bracketMatches.semifinals[1].team1 = 'Winner QF3'
-  bracketMatches.semifinals[1].team2 = 'Winner QF4'
-  
-  bracketMatches.finals[0].score = '-'
-  bracketMatches.finals[0].winner = null
-  bracketMatches.finals[0].team1 = 'Winner SF1'
-  bracketMatches.finals[0].team2 = 'Winner SF2'
-  
-  bracketMatches.consolationSemis.forEach(match => {
-    match.score = '-'
-    match.winner = null
-  })
-  bracketMatches.consolationSemis[0].team1 = 'Loser QF1'
-  bracketMatches.consolationSemis[0].team2 = 'Loser QF2'
-  bracketMatches.consolationSemis[1].team1 = 'Loser QF3'
-  bracketMatches.consolationSemis[1].team2 = 'Loser QF4'
-  
-  bracketMatches.consolationFinals[0].score = '-'
-  bracketMatches.consolationFinals[0].winner = null
-  bracketMatches.consolationFinals[0].team1 = 'Winner CSF1'
-  bracketMatches.consolationFinals[0].team2 = 'Winner CSF2'
-  
-  bracketPlayActive = false
-  
-  document.getElementById('pool-play-section').style.display = 'block'
-  document.getElementById('bracket-play-section').style.display = 'none'
-  
-  document.getElementById('result').textContent = 'Tournament has been reset!'
-  document.getElementById('result').className = 'result success'
-  
-  switchSubtab('pool-play')
-})
+});
