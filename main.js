@@ -49,10 +49,10 @@ const INITIAL_SCHEDULE = [
 
 const INITIAL_BRACKET_MATCHES = {
   quarterfinals: [
-    { id: 'qf1', team1: 'Pool A 1st', team2: 'Pool B 4th', score: '-', winner: null },
-    { id: 'qf2', team1: 'Pool B 1st', team2: 'Pool A 4th', score: '-', winner: null },
-    { id: 'qf3', team1: 'Pool A 2nd', team2: 'Pool B 3rd', score: '-', winner: null },
-    { id: 'qf4', team1: 'Pool B 2nd', team2: 'Pool A 3rd', score: '-', winner: null }
+    { id: 'qf1', team1: 'Pool A 1st', team2: 'Pool B 1st', score: '-', winner: null },
+    { id: 'qf2', team1: 'Pool A 4th', team2: 'Pool B 4th', score: '-', winner: null },
+    { id: 'qf3', team1: 'Pool A 2nd', team2: 'Pool B 2nd', score: '-', winner: null },
+    { id: 'qf4', team1: 'Pool A 3rd', team2: 'Pool B 3rd', score: '-', winner: null }
   ],
   semifinals: [
     { id: 'sf1', team1: 'Winner QF1', team2: 'Winner QF2', score: '-', winner: null },
@@ -91,7 +91,7 @@ const welcomeDescriptionHTML = `
     <p>Bracket play will be one set to 6 games with no time cap.</p>
     <p>Court 4 (closest to the parking lot), will remain open for practice and/or community use throughout the tournament. </p>
     <p>Do not be late to your first match.</p>
-    <p>The pools and bracket have been build to maximize the number of competetive games, while maintaining an advantage for winning.</p>
+    <p>The pools and bracket have been build to maximize the number of competitive games, while maintaining an advantage for winning.</p>
     <p>Prize for the winning team.</p>
     <p>Good luck to all the teams!</p>
   </div>
