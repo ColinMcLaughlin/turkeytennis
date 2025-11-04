@@ -550,3 +550,46 @@ h2 {
 .consolation-winner .bracket-team {
   color: #666;
 }
+
+/* --- NEW MOBILE-SPECIFIC BRACKET STYLES --- */
+
+/* Reduce padding and font size for the whole bracket round on small screens */
+.bracket-round {
+  min-width: 150px; /* Reduced minimum width to allow more rounds on screen */
+}
+
+.bracket-round h3 {
+  margin-bottom: 10px; /* Reduced heading margin */
+  font-size: 1.1rem; /* Slightly smaller font for round titles */
+}
+
+.bracket-match {
+  padding: 10px; /* Reduced padding inside each match box */
+  margin: 5px 0; /* Reduced margin between matches */
+}
+
+/* Reduce padding and font size for team names inside a match */
+.bracket-team {
+  padding: 5px; /* Reduced team padding */
+  font-size: 0.85rem; /* Smaller font for team names */
+}
+
+/* Reduce padding and font size for scores */
+.bracket-score {
+  padding: 5px; /* Reduced score padding */
+  font-size: 0.9rem; /* Smaller font for scores */
+}
+
+/* Make the Champion box less bulky */
+.bracket-champion {
+  padding: 15px;
+}
+
+.bracket-champion .bracket-team {
+  font-size: 1rem; /* Smaller font for the winner name */
+}
+
+/* --- Ensure this style block is below the changes above --- */
+@media (min-width: 768px) {
+  /* ... (Your existing desktop styles go here, or remain untouched) ... */
+}
