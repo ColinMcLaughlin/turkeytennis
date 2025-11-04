@@ -673,12 +673,12 @@ const attachEventListeners = () => {
     
     // Seed the bracket (Top 4 from each pool)
     newBracketMatches.quarterfinals[0].team1 = poolATeams[0].name;
-    newBracketMatches.quarterfinals[0].team2 = poolBTeams[3].name;
-    newBracketMatches.quarterfinals[1].team1 = poolBTeams[0].name;
+    newBracketMatches.quarterfinals[0].team2 = poolBTeams[0].name;
+    newBracketMatches.quarterfinals[1].team1 = poolBTeams[3].name;
     newBracketMatches.quarterfinals[1].team2 = poolATeams[3].name;
     newBracketMatches.quarterfinals[2].team1 = poolATeams[1].name;
-    newBracketMatches.quarterfinals[2].team2 = poolBTeams[2].name;
-    newBracketMatches.quarterfinals[3].team1 = poolBTeams[1].name;
+    newBracketMatches.quarterfinals[2].team2 = poolBTeams[1].name;
+    newBracketMatches.quarterfinals[3].team1 = poolBTeams[2].name;
     newBracketMatches.quarterfinals[3].team2 = poolATeams[2].name;
     
     await saveState({
