@@ -1,281 +1,463 @@
-/* ------------------------------------------- */
-/* --- BASE & TYPOGRAPHY --- */
-/* ------------------------------------------- */
 body {
-  /* Using a modern, clean sans-serif font */
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: system-ui, sans-serif;
   margin: 0;
-  padding: 1.5rem; 
-  background-color: #f7f9fc; /* Soft, very light background */
-  color: #1a1a1a;
-  line-height: 1.6; /* Improved readability */
+  padding: 1rem; /* Reduced padding for mobile-first */
+  background-color: #f9f9f9;
 }
 
 h1 {
-  margin: 0 0 1.5rem 0;
-  color: #003366; /* Deep Navy Title */
+  margin: 0 0 1rem 0;
+  color: #1a1a1a;
   font-size: 1.8rem;
-  font-weight: 800;
-  /* Added a subtle, modern gradient underline */
-  border-bottom: 3px solid #ffcc00; 
-  padding-bottom: 10px;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 
 h2 {
-  color: #005a99;
-  margin-top: 2rem; /* Increased top margin for separation */
+  color: #333;
+  margin-top: 1.5rem;
   margin-bottom: 1rem;
   font-size: 1.4rem;
-  font-weight: 700;
-  /* Subtle light background for section headers */
-  padding-left: 5px; 
 }
 
 p {
   margin: 0;
-  color: #4a4a4a;
+  color: #666;
 }
 
 /* --- Welcome Section Styling --- */
 .welcome-section {
-  padding: 2rem; /* Increased padding */
-  margin-bottom: 2.5rem; /* Increased margin */
-  background: linear-gradient(135deg, #e6f7ff, #cceeff); /* Soft gradient background */
-  border: 1px solid #0066cc;
-  border-left: 8px solid #ff9900; /* Richer orange-gold accent bar */
-  border-radius: 12px; /* Nicer rounded corners */
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Stronger shadow for depth */
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  background-color: #e6f7ff;
+  border-left: 5px solid #0066cc;
+  border-radius: 0 8px 8px 0;
 }
 
 .welcome-section h2 {
-  color: #003366;
+  color: #0066cc;
   margin-top: 0;
-  margin-bottom: 0.75rem;
-  font-size: 1.4rem;
-  font-weight: 800;
+  margin-bottom: 0.5rem;
 }
 
-/* ------------------------------------------- */
-/* --- TABS & NAVIGATION (Pill Style) --- */
-/* ------------------------------------------- */
+.welcome-section p {
+  line-height: 1.5;
+  color: #333;
+}
+
+
+/* --- Tab Navigation Fixes --- */
 .tabs, .subtabs {
-  gap: 0.5rem; 
+  display: flex;
+  gap: 0.5rem;
   margin: 1.5rem 0 1rem 0;
-  border-bottom: none; 
+  border-bottom: 2px solid #e0e0e0;
+  flex-wrap: wrap; /* Allows tabs to wrap on small screens */
 }
 
 .tab-button, .subtab-button {
-  padding: 0.75rem 1.25rem;
-  background: #ffffff; /* White background for inactive */
-  border: 1px solid #e0e0e0;
-  border-radius: 20px; /* Pill shape */
+  padding: 0.5rem 1rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
   font-size: 0.95rem; 
-  color: #4a4a4a;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); /* Smoother transition curve */
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  color: #666;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s ease;
+  flex-shrink: 0; /* Prevents buttons from shrinking too small */
+  min-height: 44px; /* Minimum tap target size */
 }
 
 .tab-button:hover, .subtab-button:hover {
-  background: #f0f0f0;
-  color: #0066cc;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  color: #333;
 }
 
 .tab-button.active, .subtab-button.active {
-  color: white;
-  background-color: #0066cc; /* Primary blue for active tab */
-  border-color: #0066cc;
-  box-shadow: 0 4px 8px rgba(0, 102, 204, 0.4);
-  transform: translateY(-2px); /* Lift effect for active tab */
+  color: #0066cc;
+  border-bottom-color: #0066cc;
 }
 
+.tab-pane, .subtab-pane {
+  display: none;
+}
 
-/* ------------------------------------------- */
-/* --- GRIDS & CARDS --- */
-/* ------------------------------------------- */
-.teams-grid {
-  gap: 2rem; /* Wider gap for better flow */
+.tab-pane.active, .subtab-pane.active {
+  display: block;
+}
+
+.teams-section,
+.alternates-section {
   margin-bottom: 2rem;
 }
 
+/* --- Grid Layout Fixes (Mobile-First 1 column) --- */
+.teams-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* Default to a single column */
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
 .pools-container {
-  gap: 2rem;
-  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: 1fr; /* Default to a single column */
+  gap: 1.5rem;
+  margin-top: 1.5rem;
 }
 
 .team-card {
   background: white;
-  border: none; /* Removed thin border */
-  border-radius: 12px; 
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
   padding: 1.5rem;
-  /* Use a subtle inset shadow and soft drop shadow */
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), inset 0 0 0 1px rgba(0, 102, 204, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   transition: box-shadow 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
 }
 
 .team-card:hover {
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15), 0 0 0 2px #0066cc; /* Blue outline on hover */
-  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
 .team-card h3 {
-  color: #003366; /* Match main header color */
-  font-weight: 700;
-  border-bottom: 1px solid #e0e0e0; /* Solid divider */
-  padding-bottom: 8px;
+  margin: 0 0 1rem 0;
+  color: #0066cc;
+  font-size: 1.1rem;
 }
 
 .team-card ul {
-  /* No changes */
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .team-card li {
   color: #555;
-  font-size: 0.95rem;
-  padding: 0.6rem 0;
+  padding: 0.5rem 0;
   border-bottom: 1px solid #f0f0f0;
 }
 
-.alternates-list li {
-  background: #f0f8ff; /* Light accent for alternates */
-  border: 1px solid #cceeff;
-  font-weight: 500;
-  transition: background-color 0.2s;
-}
-.alternates-list li:hover {
-  background: #cceeff;
-}
-
-
-/* ------------------------------------------- */
-/* --- TABLES & FORMS --- */
-/* ------------------------------------------- */
-
-.table-responsive {
-  border: 1px solid #cceeff; 
-  border-radius: 12px;
-  overflow: hidden; /* Ensures corners clip correctly */
-}
-
-.standings-table thead {
-  background-color: #005a99; /* Darker header for impact */
-}
-
-.standings-table th {
-  color: white; /* White text on dark header */
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.8rem;
-  letter-spacing: 0.5px;
+.team-card li:last-child {
   border-bottom: none;
 }
 
-.standings-table td {
-  padding: 0.8rem 0.75rem; /* Better vertical padding */
+/* --- Responsive Table Wrapper --- */
+.table-responsive {
+  overflow-x: auto; /* Enables horizontal scroll */
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 1rem;
 }
 
-.standings-table tbody tr:nth-child(even) {
-  background-color: #f7f9fc; /* Zebra striping for readability */
+.standings-table {
+  width: 100%;
+  min-width: 650px; /* Forces scroll on small screens */
+  border-collapse: collapse;
+}
+
+.standings-table thead {
+  background-color: #f5f5f5;
+}
+
+.standings-table th {
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #ddd;
+}
+
+.standings-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+  color: #555;
+  white-space: nowrap; /* Prevents score cells from wrapping */
 }
 
 .standings-table tbody tr:hover {
-  background-color: #eef4f9;
+  background-color: #f9f9f9;
 }
 
-/* Score Form Styling */
+/* --- Team Details (no major mobile changes needed, as it uses grid gap) --- */
+.team-details-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.team-detail {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.team-detail h2 {
+  margin-top: 0;
+  color: #0066cc;
+}
+
+.team-players,
+.team-pool {
+  margin-bottom: 1rem;
+  color: #555;
+}
+
+.team-description {
+  margin-top: 1.5rem;
+  line-height: 1.6;
+  color: #666;
+}
+
+.alternates-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr; /* Single column on mobile */
+  gap: 0.5rem;
+}
+
+.alternates-list li {
+  background: #f5f5f5;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  color: #555;
+}
+
+/* --- Score Form Styling --- */
 .score-form, .password-section {
-  max-width: 450px; /* Slightly narrower form */
-  border: none;
-  border-top: 4px solid #ffcc00; /* Gold accent top border */
-  border-radius: 12px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  max-width: 500px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+  font-weight: 500;
 }
 
 .form-group select,
 .form-group input {
-  border: 2px solid #ddd;
-  border-radius: 8px;
-}
-
-.form-group select:focus,
-.form-group input:focus {
-  border-color: #ff9900; /* Focus with the gold accent */
-  box-shadow: 0 0 0 4px rgba(255, 153, 0, 0.2);
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
 }
 
 .submit-btn {
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 102, 204, 0.3);
+  width: 100%;
+  padding: 0.75rem;
   background-color: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .submit-btn:hover {
-  background-color: #004c99;
-  transform: translateY(-1px);
-}
-
-/* Conclude Button Green Accent */
-#concludeBtn {
-  background-color: #1abc9c !important; /* Teal green for conclusion */
-  box-shadow: 0 4px 6px rgba(26, 188, 156, 0.4) !important;
-}
-#concludeBtn:hover {
-  background-color: #16a085 !important;
-}
-
-/* Reset Button Red Accent */
-#resetBtn {
-  background-color: #e74c3c !important;
-  box-shadow: 0 4px 6px rgba(231, 76, 60, 0.4) !important;
-}
-#resetBtn:hover {
-  background-color: #c0392b !important;
+  background-color: #0052a3;
 }
 
 .result {
-  border-radius: 8px;
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: 500;
 }
+
 .result.success {
   background-color: #d4edda;
   color: #155724;
-  border: 1px solid #1abc9c;
+  border: 1px solid #c3e6cb;
 }
 
-/* ------------------------------------------- */
-/* --- BRACKET MOBILE OPTIMIZATION (COMPRESSED) --- */
-/* ------------------------------------------- */
-/* The compressed layout remains to ensure mobile functionality */
+.result.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.result.tie {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+/* --- BRACKET MOBILE OPTIMIZATION --- */
+
+.bracket-container {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-start;
+  padding: 5px;
+  overflow-x: auto; /* Essential for horizontal scrolling */
+  -webkit-overflow-scrolling: touch;
+}
+
+.bracket-round {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  min-width: 120px; /* Aggressively reduced minimum width */
+}
+
+.bracket-round h3 {
+  text-align: center;
+  margin-bottom: 5px;
+  color: #0066cc;
+  font-size: 1rem;
+  white-space: nowrap; /* Prevents titles from wrapping */
+}
+
 .bracket-match {
-  border-color: #cceeff;
-  border-radius: 6px;
+  border: 2px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 8px;
+  margin: 5px 0;
+  background: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* ------------------------------------------- */
-/* --- DESKTOP BREAKPOINT --- */
-/* ------------------------------------------- */
+.bracket-team {
+  padding: 4px;
+  border-bottom: 1px solid #eee;
+  font-weight: 500;
+  color: #555;
+  font-size: 0.75rem; /* Compressed font size */
+}
+
+.bracket-team:last-child {
+  border-bottom: none;
+}
+
+.bracket-score {
+  text-align: center;
+  padding: 4px;
+  font-weight: bold;
+  color: #0066cc;
+  font-size: 0.8rem;
+}
+
+.bracket-champion {
+  border: 3px solid #ffd700;
+  border-radius: 8px;
+  padding: 10px;
+  background: #fffbea;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.bracket-champion .bracket-team {
+  border: none;
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: #d4af37;
+}
+
+.consolation-winner {
+  border-color: #c0c0c0;
+  background: #f5f5f5;
+}
+
+.consolation-winner .bracket-team {
+  color: #666;
+}
+
+/* ---------------------------------------------------- */
+/* DESKTOP BREAKPOINT (Styles for screens 768px and wider) */
+/* ---------------------------------------------------- */
 @media (min-width: 768px) {
   body {
-    padding: 2.5rem 4rem; /* More generous desktop padding */
+    padding: 2rem; 
   }
   
   h1 {
-    font-size: 2.8rem;
-    margin-bottom: 2.5rem;
+    font-size: 2rem;
   }
   
+  h2 {
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+  }
+
+  /* Restore Grid Layouts for Desktop */
   .teams-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
   }
 
   .pools-container {
-    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-    gap: 3rem;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .alternates-list {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.5rem;
+  }
+
+  .team-details-container {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+
+  /* Restore Bracket Spacing for Desktop */
+  .bracket-container {
+    gap: 40px;
+    padding: 20px;
+    justify-content: center;
+    overflow-x: visible;
+  }
+
+  .bracket-round {
+    min-width: 200px;
   }
   
-  /* Rest of desktop styles remain the same for functionality */
+  .bracket-round h3 {
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+  }
+
+  .bracket-match {
+    padding: 15px;
+    margin: 10px 0;
+  }
+  
+  .bracket-team {
+    padding: 8px;
+    font-size: 0.95rem;
+  }
+
+  .bracket-score {
+    padding: 8px;
+    font-size: 1rem;
+  }
+
+  .bracket-champion {
+    padding: 20px;
+  }
+  
+  .bracket-champion .bracket-team {
+    font-size: 1.1rem;
+  }
 }
