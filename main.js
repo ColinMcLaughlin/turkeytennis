@@ -24,12 +24,12 @@ const TOURNAMENT_DOC_REF = `artifacts/${appId}/public/data/tournament/tournament
 const INITIAL_TEAMS = [
   { name: 'Towson X', players: ['Elias', 'Yoshi'], pool: 'B', description: 'Welcome Towson X' },
   { name: 'Where is my husband', players: ['Brooke', 'Varidhi'], pool: 'B', description: 'Brooke is without her husband who is tall. But she should play well.' },
-  { name: 'Siblings or Married', players: ['Laurel', 'Zim'], pool: 'A', description: 'Jury is still out.  Might be both' },
+  { name: 'Siblings or Married', players: ['Laurel', 'Zim'], pool: 'A', description: 'Jury is still out. Might be both' },
   { name: 'uWu', players: ['Tab', 'NoNo'], pool: 'B', description: 'Actively over thinking their match and processing the situation like anime ' },
   { name: 'Just Roomates', players: ['Moose', 'Austin'], pool: 'A', description: 'Just roomates I swear' },
-  { name: 'Towson Y', players: ['Dan', 'Sara'], pool: 'A', description: 'ugh, another townson.' },
+  { name: 'Towson Y', players: ['Dan', 'Sara'], pool: 'A', description: 'ugh, another towson.' },
   { name: 'Team Fun', players: ['Colin', 'Cait'], pool: 'A', description: 'idk .' },
-  { name: 'Team 1 Bed 1 Bath 1 Den', players: ['Dan FB', 'Jess'], pool: 'B', description: 'will be good unless kaboom' }
+  { name: 'Team 1 Bed 1 Bath 1 Den', players: ['Dan FB', 'Jess'], pool: 'B', description: 'Will be good unless kaboom' }
 ];
 
 const INITIAL_SCHEDULE = [
@@ -90,6 +90,9 @@ const welcomeDescriptionHTML = `
     <p>Pool play games will be one abbreviated set to 4 games with a 20 minute time cap.</p>
     <p>Bracket play will be one set to 6 games with no time cap.</p>
     <p>Court 4 (closest to the parking lot), will remain open for practice and/or community use throughout the tournament. </p>
+    <p>Do not be late to your first match.</p>
+    <p>The pools and bracket have been build to maximize the number of competetive games, while maintaining an advantage for winning.</p>
+    <p>Prize for the winning team.</p>
     <p>Good luck to all the teams!</p>
   </div>
 `;
