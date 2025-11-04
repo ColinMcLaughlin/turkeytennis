@@ -2,6 +2,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebas
 import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, onSnapshot, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+// --- START FIREBASE CONFIGURATION ---
+// IMPORTANT: This block uses your actual Firebase project keys for GitHub Pages deployment.
 const firebaseConfig = {
   apiKey: "AIzaSyAGAKkeso4kFAV6y3S6XILLaEVZ-LB_h_4",
   authDomain: "turkeytennis-3d372.firebaseapp.com",
@@ -11,9 +13,11 @@ const firebaseConfig = {
   appId: "1:964948050175:web:d81932731a106cb5980cca",
   measurementId: "G-2HY1NYSDP2"
 };
-// The app is now using your hardcoded keys, ignoring the non-existent global variables.
-const appId = YOUR_FIREBASE_CONFIG.projectId || 'default-app-id'; 
-const initialAuthToken = null; // Token authentication is usually not used on static GH pages, so we set this to null.
+
+// --- CORRECTED VARIABLE DEFINITIONS ---
+// Use the defined firebaseConfig object to pull the Project ID.
+const appId = firebaseConfig.projectId || 'default-app-id'; 
+const initialAuthToken = null; // We use anonymous sign-in instead of a custom token on static hosting.
 
 // Tournament Document Path (Public data accessible to all users of this app)
 const TOURNAMENT_DOC_REF = `artifacts/${appId}/public/data/tournament/tournament-state`;
