@@ -87,7 +87,7 @@ const generateTeamsHTML = () => tournamentState.teams.map((team, idx) => `
     <ul>
       <li>${team.players[0]}</li>
       <li>${team.players[1]}</li>
-    </ul>
+    </ul
   </div>
 `).join('');
 
@@ -360,122 +360,138 @@ const renderApp = () => {
   const appDiv = document.getElementById('app');
   if (!appDiv || !tournamentState.teams) return; // Wait until data is loaded
 
-  // The main template relies on the data being loaded
-  appDiv.innerHTML = `
-    <div>
-      <h1>Turkey Tennis Doubles Invitational</h1>
-      <div class="tabs">
-        <button class="tab-button active" data-tab="home">Home</button>
-        <button class="tab-button" data-tab="schedule">Schedule and Results</button>
-        <button class="tab-button" data-tab="scores">Submit Scores</button>
-        <button class="tab-button" data-tab="teams">Team Details</button>
-      </div>
-      <div class="tab-content">
-        <div id="home" class="tab-pane active">
-          ${welcomeDescriptionHTML}
-          
-          <div class="teams-section">
-            <h2>Participating Teams</h2>
-            <div class="teams-grid">
-              ${generateTeamsHTML()}
-            </div>
-          </div>
-          <div class="alternates-section">
-            <h2>Alternates</h2>
-            <ul class="alternates-list">
-              ${generateAlternatesHTML()}
-            </ul>
-          </div>
+  try {
+    // The main template relies on the data being loaded
+    appDiv.innerHTML = `
+      <div>
+        <h1>Turkey Tennis Doubles Invitational</h1>
+        <div class="tabs">
+          <button class="tab-button active" data-tab="home">Home</button>
+          <button class="tab-button" data-tab="schedule">Schedule and Results</button>
+          <button class="tab-button" data-tab="scores">Submit Scores</button>
+          <button class="tab-button" data-tab="teams">Team Details</button>
         </div>
-        <div id="schedule" class="tab-pane">
-          <h2>Schedule and Results</h2>
-          <div class="subtabs">
-            <button class="subtab-button active" data-subtab="pool-play">Pool Play</button>
-            <button class="subtab-button" data-subtab="standings">Standings</button>
-            <button class="subtab-button" data-subtab="brackets">Brackets</button>
-          </div>
-          <div class="subtab-content">
-            <div id="pool-play" class="subtab-pane active">
-              ${generatePoolPlayHTML()}
-            </div>
-            <div id="standings" class="subtab-pane">
-              ${generateStandingsHTML()}
-            </div>
-            <div id="brackets" class="subtab-pane">
-              ${generateBracketsHTML()}
-            </div>
-          </div>
-        </div>
-        <div id="scores" class="tab-pane">
-          <h2>Submit Scores</h2>
-          <div class="password-section" id="password-section" style="display: ${passwordUnlocked ? 'none' : 'block'};">
-            <div class="form-group">
-              <label for="password">Enter Password:</label>
-              <input type="password" id="password" placeholder="Enter password">
-            </div>
-            <button id="passwordBtn" class="submit-btn">Unlock</button>
-            <div id="password-result" class="result"></div>
-          </div>
-          <div class="score-form" id="score-form" style="display: ${passwordUnlocked ? 'block' : 'none'};">
-            <div id="pool-play-section" style="display: ${tournamentState.bracketPlayActive ? 'none' : 'block'};">
-              <h3>Pool Play Scores</h3>
-              <div class="form-group">
-                <label for="match-select">Select Match:</label>
-                <select id="match-select">
-                  <option value="">Choose a match...</option>
-                  ${tournamentState.matchSchedule.map((match, idx) => `
-                    <option value="${idx}">${match.time} - Court ${match.court}: ${match.team1} vs ${match.team2} (${match.score !== '-' ? 'SCORED' : 'PENDING'})</option>
-                  `).join('')}
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="score1">Team 1 Score:</label>
-                <input type="number" id="score1" min="0" placeholder="0">
-              </div>
-              <div class="form-group">
-                <label for="score2">Team 2 Score:</label>
-                <input type="number" id="score2" min="0" placeholder="0">
-              </div>
-              <button id="submitBtn" class="submit-btn">Submit Pool Score</button>
-              <button id="concludeBtn" class="submit-btn" style="margin-top: 1rem; background-color: #28a745;">Conclude Pool Play & Start Bracket</button>
-            </div>
+        <div class="tab-content">
+          <div id="home" class="tab-pane active">
+            ${welcomeDescriptionHTML}
             
-            <div id="bracket-play-section" style="display: ${tournamentState.bracketPlayActive ? 'block' : 'none'};">
-              <h3>Bracket Play Scores</h3>
-              <div class="form-group">
-                <label for="bracket-match-select">Select Bracket Match:</label>
-                <select id="bracket-match-select">
-                  <option value="">Choose a bracket match...</option>
-                </select>
+            <div class="teams-section">
+              <h2>Participating Teams</h2>
+              <div class="teams-grid">
+                ${generateTeamsHTML()}
               </div>
-              <div class="form-group">
-                <label for="bracket-score1">Team 1 Score:</label>
-                <input type="number" id="bracket-score1" min="0" placeholder="0">
-              </div>
-              <div class="form-group">
-                <label for="bracket-score2">Team 2 Score:</label>
-                <input type="number" id="bracket-score2" min="0" placeholder="0">
-              </div>
-              <button id="submitBracketBtn" class="submit-btn">Submit Bracket Score</button>
             </div>
-            
-            <button id="resetBtn" class="submit-btn" style="margin-top: 2rem; background-color: #dc3545;">Reset Tournament</button>
-            <div id="result" class="result"></div>
+            <div class="alternates-section">
+              <h2>Alternates</h2>
+              <ul class="alternates-list">
+                ${generateAlternatesHTML()}
+              </ul>
+            </div>
           </div>
-        </div>
-        <div id="teams" class="tab-pane">
-          <h2>Team Details</h2>
-          <div class="team-details-container">
-            ${generateTeamDetailsHTML()}
+          <div id="schedule" class="tab-pane">
+            <h2>Schedule and Results</h2>
+            <div class="subtabs">
+              <button class="subtab-button active" data-subtab="pool-play">Pool Play</button>
+              <button class="subtab-button" data-subtab="standings">Standings</button>
+              <button class="subtab-button" data-subtab="brackets">Brackets</button>
+            </div>
+            <div class="subtab-content">
+              <div id="pool-play" class="subtab-pane active">
+                ${generatePoolPlayHTML()}
+              </div>
+              <div id="standings" class="subtab-pane">
+                ${generateStandingsHTML()}
+              </div>
+              <div id="brackets" class="subtab-pane">
+                ${generateBracketsHTML()}
+              </div>
+            </div>
+          </div>
+          <div id="scores" class="tab-pane">
+            <h2>Submit Scores</h2>
+            <div class="password-section" id="password-section" style="display: ${passwordUnlocked ? 'none' : 'block'};">
+              <div class="form-group">
+                <label for="password">Enter Password:</label>
+                <input type="password" id="password" placeholder="Enter password">
+              </div>
+              <button id="passwordBtn" class="submit-btn">Unlock</button>
+              <div id="password-result" class="result"></div>
+            </div>
+            <div class="score-form" id="score-form" style="display: ${passwordUnlocked ? 'block' : 'none'};">
+              <div id="pool-play-section" style="display: ${tournamentState.bracketPlayActive ? 'none' : 'block'};">
+                <h3>Pool Play Scores</h3>
+                <div class="form-group">
+                  <label for="match-select">Select Match:</label>
+                  <select id="match-select">
+                    <option value="">Choose a match...</option>
+                    ${tournamentState.matchSchedule.map((match, idx) => `
+                      <option value="${idx}">${match.time} - Court ${match.court}: ${match.team1} vs ${match.team2} (${match.score !== '-' ? 'SCORED' : 'PENDING'})</option>
+                    `).join('')}
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="score1">Team 1 Score:</label>
+                  <input type="number" id="score1" min="0" placeholder="0">
+                </div>
+                <div class="form-group">
+                  <label for="score2">Team 2 Score:</label>
+                  <input type="number" id="score2" min="0" placeholder="0">
+                </div>
+                <button id="submitBtn" class="submit-btn">Submit Pool Score</button>
+                <button id="concludeBtn" class="submit-btn" style="margin-top: 1rem; background-color: #28a745;">Conclude Pool Play & Start Bracket</button>
+              </div>
+              
+              <div id="bracket-play-section" style="display: ${tournamentState.bracketPlayActive ? 'block' : 'none'};">
+                <h3>Bracket Play Scores</h3>
+                <div class="form-group">
+                  <label for="bracket-match-select">Select Bracket Match:</label>
+                  <select id="bracket-match-select">
+                    <option value="">Choose a bracket match...</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="bracket-score1">Team 1 Score:</label>
+                  <input type="number" id="bracket-score1" min="0" placeholder="0">
+                </div>
+                <div class="form-group">
+                  <label for="bracket-score2">Team 2 Score:</label>
+                  <input type="number" id="bracket-score2" min="0" placeholder="0">
+                </div>
+                <button id="submitBracketBtn" class="submit-btn">Submit Bracket Score</button>
+              </div>
+              
+              <button id="resetBtn" class="submit-btn" style="margin-top: 2rem; background-color: #dc3545;">Reset Tournament</button>
+              <div id="result" class="result"></div>
+            </div>
+          </div>
+          <div id="teams" class="tab-pane">
+            <h2>Team Details</h2>
+            <div class="team-details-container">
+              ${generateTeamDetailsHTML()}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  `;
-  // After rendering, re-attach event listeners
-  attachEventListeners();
-  if (tournamentState.bracketPlayActive) {
-      updateBracketMatchSelect();
+    `;
+    // After rendering, re-attach event listeners
+    attachEventListeners();
+    // Ensure the default visible tabs/subtabs are active and updated
+    switchTab('home'); 
+    switchSubtab('pool-play');
+    if (tournamentState.bracketPlayActive) {
+        updateBracketMatchSelect();
+    }
+
+    // Hide loading screen and show the app only AFTER successful rendering
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+
+  } catch (e) {
+    console.error("Critical Rendering Error:", e);
+    // Display a major error message if rendering fails
+    appDiv.innerHTML = `<div style="color: red; padding: 2rem;">CRITICAL ERROR: Failed to render the application. Check the console for data or template errors.</div>`;
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
   }
 };
 
@@ -545,7 +561,16 @@ const attachEventListeners = () => {
     if (e.target.classList.contains('tab-button') && e.target.getAttribute('data-tab')) {
       switchTab(e.target.getAttribute('data-tab'));
     } else if (e.target.classList.contains('subtab-button') && e.target.getAttribute('data-subtab')) {
-      switchSubtab(e.target.getAttribute('data-subtab'));
+      // Manual content injection needed for schedule subtabs 
+      const subtabName = e.target.getAttribute('data-subtab');
+      if (subtabName === 'standings') {
+        document.getElementById('standings').innerHTML = generateStandingsHTML();
+      } else if (subtabName === 'pool-play') {
+        document.getElementById('pool-play').innerHTML = generatePoolPlayHTML();
+      } else if (subtabName === 'brackets') {
+        document.getElementById('brackets').innerHTML = generateBracketsHTML();
+      }
+      switchSubtab(subtabName);
     } else if (e.target.classList.contains('team-card') && e.target.getAttribute('data-team-id')) {
       switchTab('teams');
     }
@@ -761,10 +786,6 @@ const startApp = async () => {
         // Update local state with Firestore data
         tournamentState = data;
         
-        // Hide loading screen and render the app
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('app').style.display = 'block';
-        
         // Rerender the entire UI with the latest data
         renderApp();
       } else {
@@ -774,9 +795,12 @@ const startApp = async () => {
 
   } catch (e) {
     console.error("Firebase Initialization Failed:", e);
+    // If Firebase fails completely, show an error on the loading screen
     document.getElementById('loading').innerHTML = `
-        <div style="color: red;">Error connecting to the database. Please check console for details.</div>
+        <div style="color: red; padding: 2rem; font-weight: bold;">CRITICAL ERROR: Failed to connect to the database. Check the console for details.</div>
     `;
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('app').style.display = 'none';
   }
 };
 
