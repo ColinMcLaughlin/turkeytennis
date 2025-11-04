@@ -4,7 +4,7 @@ const teams = [
   {
     name: 'Towson X',
     players: ['Elias', 'Yoshi'],
-    pool: 'B',
+    pool: 'A',
     description: 'Welcome Towson X'
   },
   {
@@ -40,7 +40,7 @@ const teams = [
   {
     name: 'Team Fun',
     players: ['Colin', 'Cait'],
-    pool: 'A',
+    pool: 'B',
     description: 'Should play good .'
   },
   {
@@ -62,19 +62,54 @@ const alternates = [
 const CORRECT_PASSWORD = "turkey2024"
 
 let matchSchedule = [
-  { time: '9:00 AM', court: '1', team1: 'Towson X', team2: 'Siblings or Married', pool: 'A', score: '-', team1Idx: 0, team2Idx: 2 },
-  { time: '9:00 AM', court: '2', team1: 'Just Roomates', team2: 'Team Fun', pool: 'A', score: '-', team1Idx: 4, team2Idx: 6 },
-  { time: '11:15 AM', court: '1', team1: 'Towson X', team2: 'Just Roomates', pool: 'A', score: '-', team1Idx: 0, team2Idx: 4 },
-  { time: '11:15 AM', court: '2', team1: 'Siblings or Married', team2: 'Team Fun', pool: 'A', score: '-', team1Idx: 2, team2Idx: 6 },
-  { time: '1:30 PM', court: '1', team1: 'Towson X', team2: 'Team Fun', pool: 'A', score: '-', team1Idx: 0, team2Idx: 6 },
-  { time: '1:30 PM', court: '2', team1: 'Just Roomates', team2: 'Siblings or Married', pool: 'A', score: '-', team1Idx: 4, team2Idx: 2 },
-  { time: '9:00 AM', court: '3', team1: 'Where is my husband', team2: 'uWu', pool: 'B', score: '-', team1Idx: 1, team2Idx: 3 },
-  { time: '9:00 AM', court: '4', team1: 'Team 1 Bed 1 Bath 1 Den', team2: 'Towson Y', pool: 'B', score: '-', team1Idx: 7, team2Idx: 5 },
-  { time: '11:15 AM', court: '3', team1: 'Where is my husband', team2: 'Team 1 Bed 1 Bath 1 Den', pool: 'B', score: '-', team1Idx: 1, team2Idx: 7 },
-  { time: '11:15 AM', court: '4', team1: 'uWu', team2: 'Towson Y', pool: 'B', score: '-', team1Idx: 3, team2Idx: 5 },
-  { time: '1:30 PM', court: '3', team1: 'Where is my husband', team2: 'Towson Y', pool: 'B', score: '-', team1Idx: 1, team2Idx: 5 },
-  { time: '1:30 PM', court: '4', team1: 'uWu', team2: 'Team 1 Bed 1 Bath 1 Den', pool: 'B', score: '-', team1Idx: 3, team2Idx: 7 }
+  // Round 1 - 1:00 PM
+  { time: '1:00 PM', court: '1', team1: 'Towson X', team2: 'Siblings or Married', pool: 'A', score: '-', team1Idx: 0, team2Idx: 2 },
+  { time: '1:00 PM', court: '2', team1: 'Just Roomates', team2: 'Towson Y', pool: 'A', score: '-', team1Idx: 4, team2Idx: 5 },
+  { time: '1:00 PM', court: '3', team1: 'Where is my husband', team2: 'uWu', pool: 'B', score: '-', team1Idx: 1, team2Idx: 3 },
+  // Bye: Team Fun, Team 1 Bed 1 Bath 1 Den
+  
+  // Round 2 - 1:20 PM
+  { time: '1:20 PM', court: '1', team1: 'Team Fun', team2: 'Towson Y', pool: 'AB', score: '-', team1Idx: 6, team2Idx: 5 },
+  { time: '1:20 PM', court: '2', team1: 'Towson X', team2: 'Just Roomates', pool: 'A', score: '-', team1Idx: 0, team2Idx: 4 },
+  { time: '1:20 PM', court: '3', team1: 'Team 1 Bed 1 Bath 1 Den', team2: 'uWu', pool: 'B', score: '-', team1Idx: 7, team2Idx: 3 },
+  // Bye: Siblings or Married, Where is my husband
+  
+  // Round 3 - 1:40 PM
+  { time: '1:40 PM', court: '1', team1: 'Siblings or Married', team2: 'Towson Y', pool: 'A', score: '-', team1Idx: 2, team2Idx: 5 },
+  { time: '1:40 PM', court: '2', team1: 'Where is my husband', team2: 'Team 1 Bed 1 Bath 1 Den', pool: 'B', score: '-', team1Idx: 1, team2Idx: 7 },
+  { time: '1:40 PM', court: '3', team1: 'Towson X', team2: 'Team Fun', pool: 'AB', score: '-', team1Idx: 0, team2Idx: 6 },
+  // Bye: Just Roomates, uWu
+  
+  // Round 4 - 2:00 PM
+  { time: '2:00 PM', court: '1', team1: 'Just Roomates', team2: 'Siblings or Married', pool: 'A', score: '-', team1Idx: 4, team2Idx: 2 },
+  { time: '2:00 PM', court: '2', team1: 'uWu', team2: 'Where is my husband', pool: 'B', score: '-', team1Idx: 3, team2Idx: 1 },
+  { time: '2:00 PM', court: '3', team1: 'Team Fun', team2: 'Team 1 Bed 1 Bath 1 Den', pool: 'AB', score: '-', team1Idx: 6, team2Idx: 7 }
 ]
+
+let bracketMatches = {
+  quarterfinals: [
+    { id: 'qf1', team1: 'Pool A 1st', team2: 'Pool B 4th', score: '-', winner: null },
+    { id: 'qf2', team1: 'Pool B 1st', team2: 'Pool A 4th', score: '-', winner: null },
+    { id: 'qf3', team1: 'Pool A 2nd', team2: 'Pool B 3rd', score: '-', winner: null },
+    { id: 'qf4', team1: 'Pool B 2nd', team2: 'Pool A 3rd', score: '-', winner: null }
+  ],
+  semifinals: [
+    { id: 'sf1', team1: 'Winner QF1', team2: 'Winner QF2', score: '-', winner: null },
+    { id: 'sf2', team1: 'Winner QF3', team2: 'Winner QF4', score: '-', winner: null }
+  ],
+  finals: [
+    { id: 'f1', team1: 'Winner SF1', team2: 'Winner SF2', score: '-', winner: null }
+  ],
+  consolationSemis: [
+    { id: 'csf1', team1: 'Loser QF1', team2: 'Loser QF2', score: '-', winner: null },
+    { id: 'csf2', team1: 'Loser QF3', team2: 'Loser QF4', score: '-', winner: null }
+  ],
+  consolationFinals: [
+    { id: 'cf1', team1: 'Winner CSF1', team2: 'Winner CSF2', score: '-', winner: null }
+  ]
+}
+
+let bracketPlayActive = false
 
 const getRecords = () => {
   const records = {}
@@ -104,7 +139,7 @@ const generatePoolPlayHTML = () => {
   return `
     <div class="pools-container">
       <div class="pool">
-        <h3>Pool A Schedule & Scores</h3>
+        <h3>Pool Play Schedule & Scores</h3>
         <table class="standings-table">
           <thead>
             <tr>
@@ -116,38 +151,13 @@ const generatePoolPlayHTML = () => {
             </tr>
           </thead>
           <tbody>
-            ${matchSchedule.filter(m => m.pool === 'A').map((match, idx) => `
+            ${matchSchedule.map((match, idx) => `
               <tr>
                 <td>${match.time}</td>
                 <td>${match.court}</td>
                 <td>${match.team1}</td>
                 <td>${match.team2}</td>
-                <td class="score-cell" data-match-idx="${matchSchedule.indexOf(match)}">${match.score}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      </div>
-      <div class="pool">
-        <h3>Pool B Schedule & Scores</h3>
-        <table class="standings-table">
-          <thead>
-            <tr>
-              <th>Time</th>
-              <th>Court</th>
-              <th>Team 1</th>
-              <th>Team 2</th>
-              <th>Score</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${matchSchedule.filter(m => m.pool === 'B').map((match, idx) => `
-              <tr>
-                <td>${match.time}</td>
-                <td>${match.court}</td>
-                <td>${match.team1}</td>
-                <td>${match.team2}</td>
-                <td class="score-cell" data-match-idx="${matchSchedule.indexOf(match)}">${match.score}</td>
+                <td class="score-cell" data-match-idx="${idx}">${match.score}</td>
               </tr>
             `).join('')}
           </tbody>
@@ -159,6 +169,16 @@ const generatePoolPlayHTML = () => {
 
 const generateStandingsHTML = () => {
   const records = getRecords()
+  
+  const poolATeams = teams.filter(t => t.pool === 'A').map(team => {
+    const teamIdx = teams.indexOf(team)
+    return { ...team, teamIdx, record: records[teamIdx] }
+  }).sort((a, b) => b.record.wins - a.record.wins)
+  
+  const poolBTeams = teams.filter(t => t.pool === 'B').map(team => {
+    const teamIdx = teams.indexOf(team)
+    return { ...team, teamIdx, record: records[teamIdx] }
+  }).sort((a, b) => b.record.wins - a.record.wins)
 
   return `
     <div class="pools-container">
@@ -167,21 +187,19 @@ const generateStandingsHTML = () => {
         <table class="standings-table">
           <thead>
             <tr>
+              <th>Rank</th>
               <th>Team</th>
               <th>Record</th>
             </tr>
           </thead>
           <tbody>
-            ${teams.filter(t => t.pool === 'A').map((team, idx) => {
-              const teamIdx = teams.indexOf(team)
-              const record = records[teamIdx]
-              return `
-                <tr>
-                  <td>${team.name}</td>
-                  <td>${record.wins}-${record.losses}</td>
-                </tr>
-              `
-            }).join('')}
+            ${poolATeams.map((team, idx) => `
+              <tr>
+                <td>${idx + 1}</td>
+                <td>${team.name}</td>
+                <td>${team.record.wins}-${team.record.losses}</td>
+              </tr>
+            `).join('')}
           </tbody>
         </table>
       </div>
@@ -190,21 +208,19 @@ const generateStandingsHTML = () => {
         <table class="standings-table">
           <thead>
             <tr>
+              <th>Rank</th>
               <th>Team</th>
               <th>Record</th>
             </tr>
           </thead>
           <tbody>
-            ${teams.filter(t => t.pool === 'B').map((team, idx) => {
-              const teamIdx = teams.indexOf(team)
-              const record = records[teamIdx]
-              return `
-                <tr>
-                  <td>${team.name}</td>
-                  <td>${record.wins}-${record.losses}</td>
-                </tr>
-              `
-            }).join('')}
+            ${poolBTeams.map((team, idx) => `
+              <tr>
+                <td>${idx + 1}</td>
+                <td>${team.name}</td>
+                <td>${team.record.wins}-${team.record.losses}</td>
+              </tr>
+            `).join('')}
           </tbody>
         </table>
       </div>
@@ -213,9 +229,89 @@ const generateStandingsHTML = () => {
 }
 
 const generateBracketsHTML = () => {
+  const bracketHTML = `
+    <div class="bracket-container">
+      <div class="bracket-round">
+        <h3>Quarterfinals</h3>
+        ${bracketMatches.quarterfinals.map(match => `
+          <div class="bracket-match">
+            <div class="bracket-team">${match.team1}</div>
+            <div class="bracket-team">${match.team2}</div>
+            <div class="bracket-score">${match.score}</div>
+          </div>
+        `).join('')}
+      </div>
+      
+      <div class="bracket-round">
+        <h3>Semifinals</h3>
+        ${bracketMatches.semifinals.map(match => `
+          <div class="bracket-match">
+            <div class="bracket-team">${match.team1}</div>
+            <div class="bracket-team">${match.team2}</div>
+            <div class="bracket-score">${match.score}</div>
+          </div>
+        `).join('')}
+      </div>
+      
+      <div class="bracket-round">
+        <h3>Finals</h3>
+        ${bracketMatches.finals.map(match => `
+          <div class="bracket-match">
+            <div class="bracket-team">${match.team1}</div>
+            <div class="bracket-team">${match.team2}</div>
+            <div class="bracket-score">${match.score}</div>
+          </div>
+        `).join('')}
+      </div>
+      
+      <div class="bracket-round">
+        <h3>Champion</h3>
+        <div class="bracket-champion">
+          <div class="bracket-team">${bracketMatches.finals[0].winner || 'TBD'}</div>
+        </div>
+      </div>
+    </div>
+  `
+  
+  const consolationHTML = `
+    <div class="bracket-container">
+      <div class="bracket-round">
+        <h3>Consolation Semifinals</h3>
+        ${bracketMatches.consolationSemis.map(match => `
+          <div class="bracket-match">
+            <div class="bracket-team">${match.team1}</div>
+            <div class="bracket-team">${match.team2}</div>
+            <div class="bracket-score">${match.score}</div>
+          </div>
+        `).join('')}
+      </div>
+      
+      <div class="bracket-round">
+        <h3>Consolation Finals</h3>
+        ${bracketMatches.consolationFinals.map(match => `
+          <div class="bracket-match">
+            <div class="bracket-team">${match.team1}</div>
+            <div class="bracket-team">${match.team2}</div>
+            <div class="bracket-score">${match.score}</div>
+          </div>
+        `).join('')}
+      </div>
+      
+      <div class="bracket-round">
+        <h3>5th Place</h3>
+        <div class="bracket-champion consolation-winner">
+          <div class="bracket-team">${bracketMatches.consolationFinals[0].winner || 'TBD'}</div>
+        </div>
+      </div>
+    </div>
+  `
+  
   return `
-    <div class="brackets-section">
-      <p>Brackets will be displayed here after pool play concludes.</p>
+    <div class="bracket-section">
+      <h3>Championship Bracket</h3>
+      ${bracketHTML}
+      <h3 style="margin-top: 3rem;">Consolation Bracket</h3>
+      ${consolationHTML}
     </div>
   `
 }
@@ -299,24 +395,49 @@ document.querySelector('#app').innerHTML = `
           <div id="password-result" class="result"></div>
         </div>
         <div class="score-form" id="score-form" style="display: none;">
-          <div class="form-group">
-            <label for="match-select">Select Match:</label>
-            <select id="match-select">
-              <option value="">Choose a match...</option>
-              ${matchSchedule.map((match, idx) => `
-                <option value="${idx}">${match.time} - Court ${match.court}: ${match.team1} vs ${match.team2}</option>
-              `).join('')}
-            </select>
+          <div id="pool-play-section">
+            <h3>Pool Play Scores</h3>
+            <div class="form-group">
+              <label for="match-select">Select Match:</label>
+              <select id="match-select">
+                <option value="">Choose a match...</option>
+                ${matchSchedule.map((match, idx) => `
+                  <option value="${idx}">${match.time} - Court ${match.court}: ${match.team1} vs ${match.team2}</option>
+                `).join('')}
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="score1">Team 1 Score:</label>
+              <input type="number" id="score1" min="0" placeholder="0">
+            </div>
+            <div class="form-group">
+              <label for="score2">Team 2 Score:</label>
+              <input type="number" id="score2" min="0" placeholder="0">
+            </div>
+            <button id="submitBtn" class="submit-btn">Submit Score</button>
+            <button id="concludeBtn" class="submit-btn" style="margin-top: 1rem; background-color: #28a745;">Conclude Pool Play & Start Bracket</button>
           </div>
-          <div class="form-group">
-            <label for="score1">Team 1 Score:</label>
-            <input type="number" id="score1" min="0" placeholder="0">
+          
+          <div id="bracket-play-section" style="display: none;">
+            <h3>Bracket Play Scores</h3>
+            <div class="form-group">
+              <label for="bracket-match-select">Select Bracket Match:</label>
+              <select id="bracket-match-select">
+                <option value="">Choose a bracket match...</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="bracket-score1">Team 1 Score:</label>
+              <input type="number" id="bracket-score1" min="0" placeholder="0">
+            </div>
+            <div class="form-group">
+              <label for="bracket-score2">Team 2 Score:</label>
+              <input type="number" id="bracket-score2" min="0" placeholder="0">
+            </div>
+            <button id="submitBracketBtn" class="submit-btn">Submit Bracket Score</button>
           </div>
-          <div class="form-group">
-            <label for="score2">Team 2 Score:</label>
-            <input type="number" id="score2" min="0" placeholder="0">
-          </div>
-          <button id="submitBtn" class="submit-btn">Submit Score</button>
+          
+          <button id="resetBtn" class="submit-btn" style="margin-top: 2rem; background-color: #dc3545;">Reset Tournament</button>
           <div id="result" class="result"></div>
         </div>
       </div>
@@ -372,6 +493,8 @@ const switchSubtab = (subtabName) => {
     document.getElementById('standings').innerHTML = generateStandingsHTML()
   } else if (subtabName === 'pool-play') {
     document.getElementById('pool-play').innerHTML = generatePoolPlayHTML()
+  } else if (subtabName === 'brackets') {
+    document.getElementById('brackets').innerHTML = generateBracketsHTML()
   }
 }
 
@@ -446,4 +569,241 @@ document.getElementById('submitBtn').addEventListener('click', () => {
   document.getElementById('score2').value = ''
 
   switchSubtab('standings')
+})
+
+document.getElementById('concludeBtn').addEventListener('click', () => {
+  if (!confirm('Are you sure you want to conclude pool play and start bracket play? This will seed the bracket based on current standings.')) {
+    return
+  }
+  
+  const records = getRecords()
+  
+  const poolATeams = teams.filter(t => t.pool === 'A').map(team => {
+    const teamIdx = teams.indexOf(team)
+    return { ...team, teamIdx, record: records[teamIdx] }
+  }).sort((a, b) => b.record.wins - a.record.wins)
+  
+  const poolBTeams = teams.filter(t => t.pool === 'B').map(team => {
+    const teamIdx = teams.indexOf(team)
+    return { ...team, teamIdx, record: records[teamIdx] }
+  }).sort((a, b) => b.record.wins - a.record.wins)
+  
+  // Seed the bracket
+  bracketMatches.quarterfinals[0].team1 = poolATeams[0].name
+  bracketMatches.quarterfinals[0].team2 = poolBTeams[3].name
+  
+  bracketMatches.quarterfinals[1].team1 = poolBTeams[0].name
+  bracketMatches.quarterfinals[1].team2 = poolATeams[3].name
+  
+  bracketMatches.quarterfinals[2].team1 = poolATeams[1].name
+  bracketMatches.quarterfinals[2].team2 = poolBTeams[2].name
+  
+  bracketMatches.quarterfinals[3].team1 = poolBTeams[1].name
+  bracketMatches.quarterfinals[3].team2 = poolATeams[2].name
+  
+  bracketPlayActive = true
+  
+  document.getElementById('pool-play-section').style.display = 'none'
+  document.getElementById('bracket-play-section').style.display = 'block'
+  
+  updateBracketMatchSelect()
+  
+  document.getElementById('result').textContent = 'Pool play concluded! Bracket play has begun.'
+  document.getElementById('result').className = 'result success'
+  
+  switchSubtab('brackets')
+})
+
+const updateBracketMatchSelect = () => {
+  const select = document.getElementById('bracket-match-select')
+  select.innerHTML = '<option value="">Choose a bracket match...</option>'
+  
+  // Add available quarterfinal matches
+  bracketMatches.quarterfinals.forEach((match, idx) => {
+    if (match.score === '-') {
+      select.innerHTML += `<option value="qf-${idx}">Quarterfinal ${idx + 1}: ${match.team1} vs ${match.team2}</option>`
+    }
+  })
+  
+  // Add available semifinal matches
+  bracketMatches.semifinals.forEach((match, idx) => {
+    if (match.score === '-' && match.team1 !== 'Winner QF1' && match.team1 !== 'Winner QF2' && match.team1 !== 'Winner QF3' && match.team1 !== 'Winner QF4') {
+      select.innerHTML += `<option value="sf-${idx}">Semifinal ${idx + 1}: ${match.team1} vs ${match.team2}</option>`
+    }
+  })
+  
+  // Add finals match
+  if (bracketMatches.finals[0].score === '-' && bracketMatches.finals[0].team1 !== 'Winner SF1' && bracketMatches.finals[0].team1 !== 'Winner SF2') {
+    select.innerHTML += `<option value="f-0">Finals: ${bracketMatches.finals[0].team1} vs ${bracketMatches.finals[0].team2}</option>`
+  }
+  
+  // Add consolation matches
+  bracketMatches.consolationSemis.forEach((match, idx) => {
+    if (match.score === '-' && match.team1 !== 'Loser QF1' && match.team1 !== 'Loser QF2' && match.team1 !== 'Loser QF3' && match.team1 !== 'Loser QF4') {
+      select.innerHTML += `<option value="csf-${idx}">Consolation Semifinal ${idx + 1}: ${match.team1} vs ${match.team2}</option>`
+    }
+  })
+  
+  if (bracketMatches.consolationFinals[0].score === '-' && bracketMatches.consolationFinals[0].team1 !== 'Winner CSF1' && bracketMatches.consolationFinals[0].team1 !== 'Winner CSF2') {
+    select.innerHTML += `<option value="cf-0">Consolation Finals: ${bracketMatches.consolationFinals[0].team1} vs ${bracketMatches.consolationFinals[0].team2}</option>`
+  }
+}
+
+document.getElementById('submitBracketBtn').addEventListener('click', () => {
+  const matchId = document.getElementById('bracket-match-select').value
+  const score1 = parseInt(document.getElementById('bracket-score1').value)
+  const score2 = parseInt(document.getElementById('bracket-score2').value)
+  const resultDiv = document.getElementById('result')
+  
+  if (!matchId) {
+    resultDiv.textContent = 'Please select a match'
+    resultDiv.className = 'result error'
+    return
+  }
+  
+  if (isNaN(score1) || isNaN(score2)) {
+    resultDiv.textContent = 'Please enter valid scores'
+    resultDiv.className = 'result error'
+    return
+  }
+  
+  if (score1 === score2) {
+    resultDiv.textContent = 'Ties are not allowed in bracket play'
+    resultDiv.className = 'result error'
+    return
+  }
+  
+  const [round, idx] = matchId.split('-')
+  let match, winner, loser
+  
+  if (round === 'qf') {
+    match = bracketMatches.quarterfinals[parseInt(idx)]
+    winner = score1 > score2 ? match.team1 : match.team2
+    loser = score1 > score2 ? match.team2 : match.team1
+    match.score
+    match.score = `${score1} - ${score2}`
+    match.winner = winner
+    
+    // Update semifinals
+    if (idx === '0') {
+      bracketMatches.semifinals[0].team1 = winner
+      bracketMatches.consolationSemis[0].team1 = loser
+    } else if (idx === '1') {
+      bracketMatches.semifinals[0].team2 = winner
+      bracketMatches.consolationSemis[0].team2 = loser
+    } else if (idx === '2') {
+      bracketMatches.semifinals[1].team1 = winner
+      bracketMatches.consolationSemis[1].team1 = loser
+    } else if (idx === '3') {
+      bracketMatches.semifinals[1].team2 = winner
+      bracketMatches.consolationSemis[1].team2 = loser
+    }
+  } else if (round === 'sf') {
+    match = bracketMatches.semifinals[parseInt(idx)]
+    winner = score1 > score2 ? match.team1 : match.team2
+    match.score = `${score1} - ${score2}`
+    match.winner = winner
+    
+    // Update finals
+    if (idx === '0') {
+      bracketMatches.finals[0].team1 = winner
+    } else if (idx === '1') {
+      bracketMatches.finals[0].team2 = winner
+    }
+  } else if (round === 'f') {
+    match = bracketMatches.finals[0]
+    winner = score1 > score2 ? match.team1 : match.team2
+    match.score = `${score1} - ${score2}`
+    match.winner = winner
+  } else if (round === 'csf') {
+    match = bracketMatches.consolationSemis[parseInt(idx)]
+    winner = score1 > score2 ? match.team1 : match.team2
+    match.score = `${score1} - ${score2}`
+    match.winner = winner
+    
+    // Update consolation finals
+    if (idx === '0') {
+      bracketMatches.consolationFinals[0].team1 = winner
+    } else if (idx === '1') {
+      bracketMatches.consolationFinals[0].team2 = winner
+    }
+  } else if (round === 'cf') {
+    match = bracketMatches.consolationFinals[0]
+    winner = score1 > score2 ? match.team1 : match.team2
+    match.score = `${score1} - ${score2}`
+    match.winner = winner
+  }
+  
+  resultDiv.textContent = `Score submitted: ${match.team1} ${score1} - ${score2} ${match.team2} | Winner: ${winner}`
+  resultDiv.className = 'result success'
+  
+  document.getElementById('bracket-match-select').value = ''
+  document.getElementById('bracket-score1').value = ''
+  document.getElementById('bracket-score2').value = ''
+  
+  updateBracketMatchSelect()
+  switchSubtab('brackets')
+})
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  if (!confirm('Are you sure you want to reset the entire tournament? This will clear all scores and bracket data.')) {
+    return
+  }
+  
+  // Reset all pool play scores
+  matchSchedule.forEach(match => {
+    match.score = '-'
+  })
+  
+  // Reset all bracket matches
+  bracketMatches.quarterfinals.forEach(match => {
+    match.score = '-'
+    match.winner = null
+  })
+  bracketMatches.quarterfinals[0].team1 = 'Pool A 1st'
+  bracketMatches.quarterfinals[0].team2 = 'Pool B 4th'
+  bracketMatches.quarterfinals[1].team1 = 'Pool B 1st'
+  bracketMatches.quarterfinals[1].team2 = 'Pool A 4th'
+  bracketMatches.quarterfinals[2].team1 = 'Pool A 2nd'
+  bracketMatches.quarterfinals[2].team2 = 'Pool B 3rd'
+  bracketMatches.quarterfinals[3].team1 = 'Pool B 2nd'
+  bracketMatches.quarterfinals[3].team2 = 'Pool A 3rd'
+  
+  bracketMatches.semifinals.forEach(match => {
+    match.score = '-'
+    match.winner = null
+  })
+  bracketMatches.semifinals[0].team1 = 'Winner QF1'
+  bracketMatches.semifinals[0].team2 = 'Winner QF2'
+  bracketMatches.semifinals[1].team1 = 'Winner QF3'
+  bracketMatches.semifinals[1].team2 = 'Winner QF4'
+  
+  bracketMatches.finals[0].score = '-'
+  bracketMatches.finals[0].winner = null
+  bracketMatches.finals[0].team1 = 'Winner SF1'
+  bracketMatches.finals[0].team2 = 'Winner SF2'
+  
+  bracketMatches.consolationSemis.forEach(match => {
+    match.score = '-'
+    match.winner = null
+  })
+  bracketMatches.consolationSemis[0].team1 = 'Loser QF1'
+  bracketMatches.consolationSemis[0].team2 = 'Loser QF2'
+  bracketMatches.consolationSemis[1].team1 = 'Loser QF3'
+  bracketMatches.consolationSemis[1].team2 = 'Loser QF4'
+  
+  bracketMatches.consolationFinals[0].score = '-'
+  bracketMatches.consolationFinals[0].winner = null
+  bracketMatches.consolationFinals[0].team1 = 'Winner CSF1'
+  bracketMatches.consolationFinals[0].team2 = 'Winner CSF2'
+  
+  bracketPlayActive = false
+  
+  document.getElementById('pool-play-section').style.display = 'block'
+  document.getElementById('bracket-play-section').style.display = 'none'
+  
+  document.getElementById('result').textContent = 'Tournament has been reset!'
+  document.getElementById('result').className = 'result success'
+  
+  switchSubtab('pool-play')
 })
