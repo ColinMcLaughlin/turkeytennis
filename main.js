@@ -797,7 +797,7 @@ const startApp = async () => {
     console.error("Firebase Initialization Failed:", e);
     // If Firebase fails completely, show an error on the loading screen
     document.getElementById('loading').innerHTML = `
-        <div style="color: red; padding: 2rem; font-weight: bold;">CRITICAL ERROR: Failed to connect to the database. Check the console for details.</div>
+        <div style="color: red; padding: 2rem; font-weight: bold;">CRITICAL ERROR: Failed to connect to the database. Please check console for details.</div>
     `;
     document.getElementById('loading').style.display = 'block';
     document.getElementById('app').style.display = 'none';
