@@ -3,15 +3,15 @@ import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.g
 import { getFirestore, doc, setDoc, getDoc, onSnapshot, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 // --- Global Setup (Required by Canvas Environment) ---
+// These variables are injected by the execution environment to handle authentication and configuration.
 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initialAuthToken : null;
 
 // Tournament Document Path (Public data accessible to all users of this app)
 const TOURNAMENT_DOC_REF = `artifacts/${appId}/public/data/tournament/tournament-state`;
 
 // --- Initial Tournament State (Used only if no data exists in Firestore) ---
-// ... (INITIAL_TEAMS, INITIAL_SCHEDULE, INITIAL_BRACKET_MATCHES, INITIAL_ALTERNATES, CORRECT_PASSWORD remain the same) ...
 const INITIAL_TEAMS = [
   { name: 'Towson X', players: ['Elias', 'Yoshi'], pool: 'A', description: 'Welcome Towson X' },
   { name: 'Where is my husband', players: ['Brooke', 'Varidhi'], pool: 'B', description: 'Brooke is without her husband who is tall. But she should play well.' },
