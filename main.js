@@ -59,8 +59,92 @@ const alternates = [
   'Team PeeCeeTee'
 ]
 
-// Password - change this to whatever you want
-const CORRECT_PASSWORD = "turkey2024";
+let matchResults = []
+
+const getRecords = () => {
+  const records = {}
+  teams.forEach((team, idx) => {
+    records[idx] = { wins: 0, losses: 0 }
+  })
+
+  matchResults.forEach(match => {
+    if (match.team1Score > match.team2Score) {
+      records[match.team1].wins++
+      records[match.team2].losses++
+    } else if (match.team2Score > match.team1Score) {
+      records[match.team2].wins++
+      records[match.team1].losses++
+    }
+  })
+
+  return records
+}
+
+const generatePoolsHTML = () => {
+  const records = getRecords()
+
+  return `
+    <div class="pools-container">
+      <div class="pool">
+        <h3>Pool A</h3>
+        <table class="standings-table">
+          <thead>
+            <tr>
+              <th>Team</th>
+              <th>Record</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${teams.filter(t => t.pool === 'A').map((team, idx) => {
+              const record = records[idx]
+              const teamIdx = teams.findIndex(t => t === team)
+              return `
+                <tr>
+                  <td>${team.name}</td>
+                  <td>${record.wins}-${record.losses}</td>
+                </tr>
+              `
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+      <div class="pool">
+        <h3>Pool B</h3>
+        <table class="standings-table">
+          <thead>
+            <tr>
+              <th>Team</th>
+              <th>Record</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${teams.filter(t => t.pool === 'B').map((team, idx) => {
+              const record = records[idx]
+              const teamIdx = teams.findIndex(t => t === team)
+              return `
+                <tr>
+                  <td>${team.name}</td>
+                  <td>${record.wins}-${record.losses}</td>
+                </tr>
+              `
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="matches-section">
+      <h3>Match Results</h3>
+      <div class="matches-list">
+        ${matchResults.length === 0 ? '<p>No matches played yet.</p>' : matchResults.map((match, idx) => `
+          <div class="match-result">
+            <strong>${teams[match.team1].name}</strong> ${match.team1Score} - ${match.team2Score} <strong>${teams[match.team2].name}</strong>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `
+}
 
 const teamsHTML = teams.map((team, idx) => `
   <div class="team-card" data-team-id="${idx}">
@@ -75,260 +159,6 @@ const teamsHTML = teams.map((team, idx) => `
 const alternatesHTML = alternates.map(alt => `<li>${alt}</li>`).join('')
 
 const teamOptions = teams.map((team, idx) => `<option value="${idx}">${team.name}</option>`).join('')
-
-const poolsHTML = `
-  <div class="pools-container">
-    <div class="pool">
-      <h3>Pool A</h3>
-      <table class="standings-table">
-        <thead>
-          <tr>
-            <th>Team</th>
-            <th>Record</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${teams.filter(t => t.pool === 'A').map(team => `
-            <tr>
-              <td>${team.name}</td>
-              <td>0-0</td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    </div>
-    <div class="pool">
-      <h3>Pool B</h3>
-      <table class="standings-table">
-        <thead>
-          <tr>
-            <th>Team</th>
-            <th>Record</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${teams.filter(t => t.pool === 'B').map(team => `
-            <tr>
-              <td>${team.name}</td>
-              <td>0-0</td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="pools-container">
-    <div class="pool">
-      <h3>Pool A Schedule & Scores</h3>
-      <table class="standings-table">
-        <thead>
-          <tr>
-            <th>Time</th>
-            <th>Court</th>
-            <th>Team 1</th>
-            <th>Team 2</th>
-            <th>Score</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>9:00 AM</td>
-            <td>1</td>
-            <td>Towson X</td>
-            <td>Team Siblings or Married</td>
-            <td>-</td>
-          </tr>
-          <tr>
-            <td>9:00 AM</td>
-            <td>2</td>
-            <td>Just Roomates</td>
-            <td>Team Fun</td>
-            <td>-</td>
-          </tr>
-          <tr>
-            <td>11:15 AM</td>
-            <td>1</td>
-            <td>Towson X</td>
-            <td>Just Roomates</td>
-            <td>-</td>
-          </tr>
-          <tr>
-            <td>11:15 AM</td>
-            <td>2</td>
-            <td>Team Siblings or Married</td>
-            <td>Team Fun</td>
-            <td>-</td>
-          </tr>
-          <tr>
-            <td>1:30 PM</td>
-            <td>1</td>
-            <td>Towson X</td>
-            <td>Team Fun</td>
-            <td>-</td>
-          </tr>
-          <tr>
-            <td>1:30 PM</td>
-            <td>2</td>
-            <td>Team Siblings or Married</td>
-            <td>Just Roomates</td>
-            <td>-</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="pool">
-      <h3>Pool B Schedule & Scores</h3>
-      <table class="standings-table">
-        <thead>
-          <tr>
-            <th>Time</th>
-            <th>Court</th>
-            <th>Team 1</th>
-            <th>Team 2</th>
-            <th>Score</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>9:00 AM</td>
-            <td>3</td>
-            <td>Team Where is my husband</td>
-            <td>Team uuWuu</td>
-            <td>-</td>
-          </tr>
-          <tr>
-            <td>9:00 AM</td>
-            <td>4</td>
-            <td>Towson Y</td>
-            <td>Team 1 Bed 1 Bath 1 Den</td>
-            <td>-</td>
-          </tr>
-          <tr>
-            <td>11:15 AM</td>
-            <td>3</td>
-            <td>Team Where is my husband</td>
-            <td>Towson Y</td>
-            <td>-</td>
-          </tr>
-          <tr>
-            <td>11:15 AM</td>
-            <td>4</td>
-            <td>Team uuWuu</td>
-            <td>Team 1 Bed 1 Bath 1 Den</td>
-            <td>-</td>
-          </tr>
-          <tr>
-            <td>1:30 PM</td>
-            <td>3</td>
-            <td>Team Where is my husband</td>
-            <td>Team 1 Bed 1 Bath 1 Den</td>
-            <td>-</td>
-          </tr>
-          <tr>
-            <td>1:30 PM</td>
-            <td>4</td>
-            <td>Team uuWuu</td>
-            <td>Towson Y</td>
-            <td>-</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-`
-
-const bracketHTML = `
-  <div class="bracket-container">
-    <div class="bracket-round">
-      <h3>Quarterfinals</h3>
-      <div class="bracket-match">
-        <div class="bracket-team">Pool A 1st</div>
-        <div class="bracket-team">Pool B 4th</div>
-        <div class="bracket-score">-</div>
-      </div>
-      <div class="bracket-match">
-        <div class="bracket-team">Pool B 1st</div>
-        <div class="bracket-team">Pool A 4th</div>
-        <div class="bracket-score">-</div>
-      </div>
-      <div class="bracket-match">
-        <div class="bracket-team">Pool A 2nd</div>
-        <div class="bracket-team">Pool B 3rd</div>
-        <div class="bracket-score">-</div>
-      </div>
-      <div class="bracket-match">
-        <div class="bracket-team">Pool B 2nd</div>
-        <div class="bracket-team">Pool A 3rd</div>
-        <div class="bracket-score">-</div>
-      </div>
-    </div>
-    
-    <div class="bracket-round">
-      <h3>Semifinals</h3>
-      <div class="bracket-match">
-        <div class="bracket-team">Winner QF1</div>
-        <div class="bracket-team">Winner QF2</div>
-        <div class="bracket-score">-</div>
-      </div>
-      <div class="bracket-match">
-        <div class="bracket-team">Winner QF3</div>
-        <div class="bracket-team">Winner QF4</div>
-        <div class="bracket-score">-</div>
-      </div>
-    </div>
-    
-    <div class="bracket-round">
-      <h3>Finals</h3>
-      <div class="bracket-match">
-        <div class="bracket-team">Winner SF1</div>
-        <div class="bracket-team">Winner SF2</div>
-        <div class="bracket-score">-</div>
-      </div>
-    </div>
-    
-    <div class="bracket-round">
-      <h3>Champion</h3>
-      <div class="bracket-champion">
-        <div class="bracket-team">TBD</div>
-      </div>
-    </div>
-  </div>
-`
-
-const consolationBracketHTML = `
-  <div class="bracket-container">
-    <div class="bracket-round">
-      <h3>Consolation Semifinals</h3>
-      <div class="bracket-match">
-        <div class="bracket-team">Loser QF1</div>
-        <div class="bracket-team">Loser QF2</div>
-        <div class="bracket-score">-</div>
-      </div>
-      <div class="bracket-match">
-        <div class="bracket-team">Loser QF3</div>
-        <div class="bracket-team">Loser QF4</div>
-        <div class="bracket-score">-</div>
-      </div>
-    </div>
-    
-    <div class="bracket-round">
-      <h3>Consolation Finals</h3>
-      <div class="bracket-match">
-        <div class="bracket-team">Winner CSF1</div>
-        <div class="bracket-team">Winner CSF2</div>
-        <div class="bracket-score">-</div>
-      </div>
-    </div>
-    
-    <div class="bracket-round">
-      <h3>5th Place</h3>
-      <div class="bracket-champion consolation-winner">
-        <div class="bracket-team">TBD</div>
-      </div>
-    </div>
-  </div>
-`
 
 const teamDetailsHTML = teams.map((team, idx) => `
   <div class="team-detail">
@@ -369,21 +199,8 @@ document.querySelector('#app').innerHTML = `
       </div>
       <div id="schedule" class="tab-pane">
         <h2>Schedule and Results</h2>
-        <div class="subtabs">
-          <button class="subtab-button active" data-subtab="pool-play">Pool Play</button>
-          <button class="subtab-button" data-subtab="bracket-play">Bracket Play</button>
-          <button class="subtab-button" data-subtab="consolation-bracket">Consolation Bracket</button>
-        </div>
-        <div class="subtab-content">
-          <div id="pool-play" class="subtab-pane active">
-            ${poolsHTML}
-          </div>
-          <div id="bracket-play" class="subtab-pane">
-            ${bracketHTML}
-          </div>
-          <div id="consolation-bracket" class="subtab-pane">
-            ${consolationBracketHTML}
-          </div>
+        <div id="schedule-content">
+          ${generatePoolsHTML()}
         </div>
       </div>
       <div id="scores" class="tab-pane">
@@ -411,10 +228,6 @@ document.querySelector('#app').innerHTML = `
             <label for="score2">Team 2 Score:</label>
             <input type="number" id="score2" min="0" placeholder="0">
           </div>
-          <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" id="password" placeholder="Enter password">
-          </div>
           <button id="submitBtn" class="submit-btn">Submit Score</button>
           <div id="result" class="result"></div>
         </div>
@@ -435,27 +248,16 @@ const switchTab = (tabName) => {
 
   document.querySelector(`[data-tab="${tabName}"]`).classList.add('active')
   document.getElementById(tabName).classList.add('active')
-}
 
-const switchSubtab = (subtabName) => {
-  document.querySelectorAll('.subtab-button').forEach(btn => btn.classList.remove('active'))
-  document.querySelectorAll('.subtab-pane').forEach(pane => pane.classList.remove('active'))
-
-  document.querySelector(`[data-subtab="${subtabName}"]`).classList.add('active')
-  document.getElementById(subtabName).classList.add('active')
+  if (tabName === 'schedule') {
+    document.getElementById('schedule-content').innerHTML = generatePoolsHTML()
+  }
 }
 
 document.querySelectorAll('.tab-button').forEach(button => {
   button.addEventListener('click', () => {
     const tabName = button.getAttribute('data-tab')
     switchTab(tabName)
-  })
-})
-
-document.querySelectorAll('.subtab-button').forEach(button => {
-  button.addEventListener('click', () => {
-    const subtabName = button.getAttribute('data-subtab')
-    switchSubtab(subtabName)
   })
 })
 
@@ -470,16 +272,8 @@ document.getElementById('submitBtn').addEventListener('click', () => {
   const team2Idx = document.getElementById('team2').value
   const score1 = parseInt(document.getElementById('score1').value) || 0
   const score2 = parseInt(document.getElementById('score2').value) || 0
-  const password = document.getElementById('password').value
 
   const resultDiv = document.getElementById('result')
-
-  // Check password first
-  if (password !== CORRECT_PASSWORD) {
-    resultDiv.textContent = 'Incorrect password!'
-    resultDiv.className = 'result error'
-    return
-  }
 
   if (!team1Idx || !team2Idx) {
     resultDiv.textContent = 'Please select both teams'
@@ -493,9 +287,22 @@ document.getElementById('submitBtn').addEventListener('click', () => {
     return
   }
 
+  if (score1 === 0 && score2 === 0) {
+    resultDiv.textContent = 'Please enter at least one score'
+    resultDiv.className = 'result error'
+    return
+  }
+
   const team1Name = teams[team1Idx].name
   const team2Name = teams[team2Idx].name
   let winner
+
+  matchResults.push({
+    team1: parseInt(team1Idx),
+    team2: parseInt(team2Idx),
+    team1Score: score1,
+    team2Score: score2
+  })
 
   if (score1 > score2) {
     winner = team1Name
@@ -504,16 +311,18 @@ document.getElementById('submitBtn').addEventListener('click', () => {
   } else {
     resultDiv.textContent = `${team1Name} ${score1} - ${score2} ${team2Name} (Tied)`
     resultDiv.className = 'result tie'
+    document.getElementById('team1').value = ''
+    document.getElementById('team2').value = ''
+    document.getElementById('score1').value = ''
+    document.getElementById('score2').value = ''
     return
   }
 
   resultDiv.textContent = `${team1Name} ${score1} - ${score2} ${team2Name} | Winner: ${winner}`
   resultDiv.className = 'result success'
-  
-  // Clear the form after successful submission
+
   document.getElementById('team1').value = ''
   document.getElementById('team2').value = ''
   document.getElementById('score1').value = ''
   document.getElementById('score2').value = ''
-  document.getElementById('password').value = ''
 })
