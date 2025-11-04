@@ -28,7 +28,7 @@ const INITIAL_TEAMS = [
   { name: 'uWu', players: ['Tab', 'NoNo'], pool: 'B', description: 'Actively over thinking their match and processing the situation like anime ' },
   { name: 'Just Roomates', players: ['Moose', 'Austin'], pool: 'A', description: 'Just roomates I swear' },
   { name: 'Towson Y', players: ['Dan', 'Sara'], pool: 'A', description: 'ugh, another townson.' },
-  { name: 'Team Fun', players: ['Colin', 'Cait'], pool: 'A', description: 'Should play good .' },
+  { name: 'Team Fun', players: ['Colin', 'Cait'], pool: 'A', description: 'idk .' },
   { name: 'Team 1 Bed 1 Bath 1 Den', players: ['Dan FB', 'Jess'], pool: 'B', description: 'will be good unless kaboom' }
 ];
 
@@ -87,9 +87,9 @@ const welcomeDescriptionHTML = `
     <h2>Welcome to the Turkey Tennis Doubles Invitational at Meadowbrook Local Park! 🦃🎾 </h2>
     <h3>November 22nd, 2025</h3>
     <p>Use the tabs above to view teams, see the schedule, and submit scores.</p>
-    <p>Pool play games will be one abbreviated set to 4 games with a 20 minute time cap</p>
-    <p>Bracket play will be one set to 6 games with no time cap</p>
-    <p>Court 4 (closest to the parking lot), will remain open for practice and/or community use throughout the tournament </p>
+    <p>Pool play games will be one abbreviated set to 4 games with a 20 minute time cap.</p>
+    <p>Bracket play will be one set to 6 games with no time cap.</p>
+    <p>Court 4 (closest to the parking lot), will remain open for practice and/or community use throughout the tournament. </p>
     <p>Good luck to all the teams!</p>
   </div>
 `;
