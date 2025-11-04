@@ -3,7 +3,6 @@ import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.g
 import { getFirestore, doc, setDoc, getDoc, onSnapshot, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 // --- START FIREBASE CONFIGURATION ---
-// IMPORTANT: This block uses your actual Firebase project keys for GitHub Pages deployment.
 const firebaseConfig = {
   apiKey: "AIzaSyAGAKkeso4kFAV6y3S6XILLaEVZ-LB_h_4",
   authDomain: "turkeytennis-3d372.firebaseapp.com",
@@ -15,11 +14,10 @@ const firebaseConfig = {
 };
 
 // --- CORRECTED VARIABLE DEFINITIONS ---
-// Use the defined firebaseConfig object to pull the Project ID.
 const appId = firebaseConfig.projectId || 'default-app-id'; 
-const initialAuthToken = null; // We use anonymous sign-in instead of a custom token on static hosting.
+const initialAuthToken = null; 
 
-// Tournament Document Path (Public data accessible to all users of this app)
+// Tournament Document Path 
 const TOURNAMENT_DOC_REF = `artifacts/${appId}/public/data/tournament/tournament-state`;
 
 // --- Initial Tournament State (Used only if no data exists in Firestore) ---
@@ -99,7 +97,7 @@ const generateTeamsHTML = () => tournamentState.teams.map((team, idx) => `
     <ul>
       <li>${team.players[0]}</li>
       <li>${team.players[1]}</li>
-    </ul
+    </ul>
   </div>
 `).join('');
 
@@ -514,6 +512,7 @@ const switchTab = (tabName) => {
   const tabButton = document.querySelector(`[data-tab="${tabName}"]`);
   const tabPane = document.getElementById(tabName);
   
+  // Use simple display/class logic as the template is fully regenerated
   if (tabButton && tabPane) {
       tabButton.classList.add('active');
       tabPane.classList.add('active');
@@ -568,30 +567,19 @@ const attachEventListeners = () => {
   const appDiv = document.getElementById('app');
   if (!appDiv) return;
 
-  // Use a temporary event handler to capture all clicks and remove itself later
-  const eventHandler = (e) => {
+  // Since renderApp completely regenerates all HTML, we must attach listeners every time.
+  // Using event delegation on the root div for tabs/subtabs is more efficient.
+  
+  // Clear any existing listeners first if possible (though the innerHTML clear often handles this).
+  appDiv.onclick = (e) => {
       if (e.target.classList.contains('tab-button') && e.target.getAttribute('data-tab')) {
         switchTab(e.target.getAttribute('data-tab'));
       } else if (e.target.classList.contains('subtab-button') && e.target.getAttribute('data-subtab')) {
-        // Manual content injection needed for schedule subtabs 
-        const subtabName = e.target.getAttribute('data-subtab');
-        if (subtabName === 'standings') {
-          // No need to re-render, data is fresh from Firestore
-        } else if (subtabName === 'pool-play') {
-          // No need to re-render, data is fresh from Firestore
-        } else if (subtabName === 'brackets') {
-          // No need to re-render, data is fresh from Firestore
-        }
-        switchSubtab(subtabName);
+        switchSubtab(e.target.getAttribute('data-subtab'));
       } else if (e.target.classList.contains('team-card') && e.target.getAttribute('data-team-id')) {
         switchTab('teams');
       }
   };
-
-  // Temporarily remove all existing listeners to avoid duplicates
-  appDiv.removeEventListener('click', appDiv.eventHandler);
-  appDiv.addEventListener('click', eventHandler);
-  appDiv.eventHandler = eventHandler;
 
 
   // --- Password Unlock ---
@@ -614,7 +602,7 @@ const attachEventListeners = () => {
   // --- Pool Play Score Submission ---
   const submitBtn = document.getElementById('submitBtn');
   if (submitBtn) submitBtn.onclick = async () => {
-    if (!passwordUnlocked) return; // Should be hidden, but safety first
+    if (!passwordUnlocked) return; 
 
     const matchIdx = parseInt(document.getElementById('match-select').value);
     const score1 = parseInt(document.getElementById('score1').value);
@@ -674,7 +662,7 @@ const attachEventListeners = () => {
       return { ...team, teamIdx, record: records[teamIdx] };
     }).sort((a, b) => b.record.wins - a.record.wins);
     
-    let newBracketMatches = JSON.parse(JSON.stringify(tournamentState.bracketMatches)); // Deep copy
+    let newBracketMatches = JSON.parse(JSON.stringify(tournamentState.bracketMatches)); 
     
     // Seed the bracket (Top 4 from each pool)
     newBracketMatches.quarterfinals[0].team1 = poolATeams[0].name;
