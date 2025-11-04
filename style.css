@@ -603,3 +603,51 @@ h2 {
 .bracket-champion .bracket-team {
   font-size: 0.85rem;
 }
+
+/* Mobile-specific bracket fixes */
+@media (max-width: 767px) {
+  .bracket-container {
+    /* Stack rounds vertically instead of horizontally */
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+    padding: 15px;
+  }
+
+  .bracket-round {
+    /* Full width for each round on mobile */
+    min-width: 100%;
+    width: 100%;
+  }
+
+  .bracket-round h3 {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+  }
+
+  .bracket-match {
+    padding: 12px;
+    margin: 8px 0;
+  }
+
+  .bracket-team {
+    font-size: 0.9rem;
+    padding: 6px;
+    /* Allow team names to wrap if too long */
+    white-space: normal;
+    word-wrap: break-word;
+  }
+
+  .bracket-score {
+    font-size: 0.95rem;
+    padding: 6px;
+  }
+
+  .bracket-champion {
+    padding: 15px;
+  }
+
+  .bracket-champion .bracket-team {
+    font-size: 1rem;
+  }
+}
