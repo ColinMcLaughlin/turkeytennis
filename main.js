@@ -2,12 +2,18 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebas
 import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, onSnapshot, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-// --- Global Setup (Required by Canvas Environment) ---
-// These variables are injected by the execution environment to handle authentication and configuration.
-const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-// FIX: Ensure correct global variable name is used to assign the token
-const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+const firebaseConfig = {
+  apiKey: "AIzaSyAGAKkeso4kFAV6y3S6XILLaEVZ-LB_h_4",
+  authDomain: "turkeytennis-3d372.firebaseapp.com",
+  projectId: "turkeytennis-3d372",
+  storageBucket: "turkeytennis-3d372.firebasestorage.app",
+  messagingSenderId: "964948050175",
+  appId: "1:964948050175:web:d81932731a106cb5980cca",
+  measurementId: "G-2HY1NYSDP2"
+};
+// The app is now using your hardcoded keys, ignoring the non-existent global variables.
+const appId = YOUR_FIREBASE_CONFIG.projectId || 'default-app-id'; 
+const initialAuthToken = null; // Token authentication is usually not used on static GH pages, so we set this to null.
 
 // Tournament Document Path (Public data accessible to all users of this app)
 const TOURNAMENT_DOC_REF = `artifacts/${appId}/public/data/tournament/tournament-state`;
