@@ -4,23 +4,23 @@ const teams = [
   {
     name: 'Towson X',
     players: ['Elias', 'Yoshi'],
-    pool: 'A',
+    pool: 'B',
     description: 'Welcome Towson X'
   },
   {
-    name: 'Team Where is my husband',
+    name: 'Where is my husband',
     players: ['Brooke', 'Varidhi'],
     pool: 'B',
     description: 'Brooke is without her husband who is tall. But she should play well.'
   },
   {
-    name: 'Team Siblings or Married',
+    name: 'Siblings or Married',
     players: ['Laurel', 'Zim'],
     pool: 'A',
     description: 'Jury is still out.  Might be both'
   },
   {
-    name: 'Team uuWuu',
+    name: 'uWu',
     players: ['Tab', 'NoNo'],
     pool: 'B',
     description: 'Actively over thinking their match and processing the situation like anime '
@@ -34,7 +34,7 @@ const teams = [
   {
     name: 'Towson Y',
     players: ['Dan', 'Sara'],
-    pool: 'B',
+    pool: 'A',
     description: 'ugh, another townson.'
   },
   {
