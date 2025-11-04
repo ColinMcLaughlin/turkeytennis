@@ -84,8 +84,12 @@ let db;
 // --- Template Content Generation ---
 const welcomeDescriptionHTML = `
   <div class="welcome-section">
-    <h2>Welcome to the Turkey Tennis Doubles Invitational! 🦃🎾</h2>
-    <p>We're thrilled to host another year of friendly (and sometimes fierce) competition. Use the tabs above to view teams, see the schedule, and submit scores.</p>
+    <h2>Welcome to the Turkey Tennis Doubles Invitational at Meadowbrook Local Park! 🦃🎾 </h2>
+    <h3>November 22nd, 2025</h3>
+    <p>Use the tabs above to view teams, see the schedule, and submit scores.</p>
+    <p>Pool play games will be one abbreviated set to 4 games with a 20 minute time cap</p>
+    <p>Bracket play will be one set to 6 games with no time cap</p>
+    <p>Court 4 (closest to the parking lot), will remain open for practice and/or community use throughout the tournament </p>
     <p>Good luck to all the teams!</p>
   </div>
 `;
