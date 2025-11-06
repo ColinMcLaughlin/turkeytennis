@@ -49,10 +49,10 @@ const INITIAL_SCHEDULE = [
 
 const INITIAL_BRACKET_MATCHES = {
   quarterfinals: [
-    { id: 'qf1', team1: 'Pool A 1st', team2: 'Pool B 1st', score: '-', winner: null },
-    { id: 'qf2', team1: 'Pool A 4th', team2: 'Pool B 4th', score: '-', winner: null },
-    { id: 'qf3', team1: 'Pool A 2nd', team2: 'Pool B 2nd', score: '-', winner: null },
-    { id: 'qf4', team1: 'Pool A 3rd', team2: 'Pool B 3rd', score: '-', winner: null }
+    { id: 'qf1', team1: 'Pool A 1st', team2: 'Pool B 4th', score: '-', winner: null },
+    { id: 'qf2', team1: 'Pool B 2nd', team2: 'Pool A 3th', score: '-', winner: null },
+    { id: 'qf3', team1: 'Pool A 2nd', team2: 'Pool B 3rd', score: '-', winner: null },
+    { id: 'qf4', team1: 'Pool B 1st', team2: 'Pool A 4th', score: '-', winner: null }
   ],
   semifinals: [
     { id: 'sf1', team1: 'Winner QF1', team2: 'Winner QF2', score: '-', winner: null },
@@ -673,13 +673,13 @@ const attachEventListeners = () => {
     
     // Seed the bracket (Top 4 from each pool)
     newBracketMatches.quarterfinals[0].team1 = poolATeams[0].name;
-    newBracketMatches.quarterfinals[0].team2 = poolBTeams[0].name;
-    newBracketMatches.quarterfinals[1].team1 = poolBTeams[3].name;
-    newBracketMatches.quarterfinals[1].team2 = poolATeams[3].name;
+    newBracketMatches.quarterfinals[0].team2 = poolBTeams[3].name;
+    newBracketMatches.quarterfinals[1].team1 = poolBTeams[1].name;
+    newBracketMatches.quarterfinals[1].team2 = poolATeams[2].name;
     newBracketMatches.quarterfinals[2].team1 = poolATeams[1].name;
-    newBracketMatches.quarterfinals[2].team2 = poolBTeams[1].name;
-    newBracketMatches.quarterfinals[3].team1 = poolBTeams[2].name;
-    newBracketMatches.quarterfinals[3].team2 = poolATeams[2].name;
+    newBracketMatches.quarterfinals[2].team2 = poolBTeams[3].name;
+    newBracketMatches.quarterfinals[3].team1 = poolBTeams[0].name;
+    newBracketMatches.quarterfinals[3].team2 = poolATeams[3].name;
     
     await saveState({
         bracketMatches: newBracketMatches,
