@@ -1,8 +1,8 @@
+import React, { useState, useEffect } from 'react';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, onSnapshot, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, onSnapshot, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-// --- START FIREBASE CONFIGURATION ---
 const firebaseConfig = {
   apiKey: "AIzaSyAGAKkeso4kFAV6y3S6XILLaEVZ-LB_h_4",
   authDomain: "turkeytennis-3d372.firebaseapp.com",
@@ -13,822 +13,526 @@ const firebaseConfig = {
   measurementId: "G-2HY1NYSDP2"
 };
 
-// --- CORRECTED VARIABLE DEFINITIONS ---
-const appId = firebaseConfig.projectId || 'default-app-id'; 
-const initialAuthToken = null; 
+const TOURNAMENT_DOC_REF = `artifacts/turkeytennis-3d372/public/data/swiss-tournament/tournament-state`;
+const CORRECT_PASSWORD = "turkey2024";
+const TOTAL_ROUNDS = 4;
 
-// Tournament Document Path 
-const TOURNAMENT_DOC_REF = `artifacts/${appId}/public/data/tournament/tournament-state`;
-
-// --- Initial Tournament State (Used only if no data exists in Firestore) ---
 const INITIAL_TEAMS = [
-  { name: 'Towson X', players: ['Elias', 'Yoshi'], pool: 'B', description: 'Welcome Towson X' },
-  { name: 'Where is my husband', players: ['Brooke', 'Varidhi'], pool: 'B', description: 'Brooke is without her husband who is tall. But she should play well.' },
-  { name: 'Siblings or Married', players: ['Laurel', 'Zim'], pool: 'A', description: 'Jury is still out. Might be both' },
-  { name: 'uWu', players: ['Tab', 'NoNo'], pool: 'B', description: 'Actively over thinking their match and processing the situation like anime ' },
-  { name: 'Just Roomates', players: ['Moose', 'Austin'], pool: 'A', description: 'Just roomates I swear' },
-  { name: 'Towson Y', players: ['Dan', 'Sara'], pool: 'A', description: 'ugh, another towson.' },
-  { name: 'Team Fun', players: ['Colin', 'Cait'], pool: 'A', description: 'idk .' },
-  { name: 'Team 1 Bed 1 Bath 1 Den', players: ['Dan FB', 'Jess'], pool: 'B', description: 'Will be good unless kaboom' }
+  { name: 'Towson X', players: ['Elias', 'Yoshi'], description: 'Welcome Towson X' },
+  { name: 'Where is my husband', players: ['Brooke', 'Varidhi'], description: 'Brooke is without her husband who is tall. But she should play well.' },
+  { name: 'Siblings or Married', players: ['Laurel', 'Zim'], description: 'Jury is still out. Might be both' },
+  { name: 'uWu', players: ['Tab', 'NoNo'], description: 'Actively over thinking their match and processing the situation like anime' },
+  { name: 'Just Roomates', players: ['Moose', 'Austin'], description: 'Just roomates I swear' },
+  { name: 'Towson Y', players: ['Dan', 'Sara'], description: 'ugh, another towson.' },
+  { name: 'Team Fun', players: ['Colin', 'Cait'], description: 'idk.' },
+  { name: 'Team 1 Bed 1 Bath 1 Den', players: ['Dan FB', 'Jess'], description: 'Will be good unless kaboom' }
 ];
-
-const INITIAL_SCHEDULE = [
-  { time: '1:00 PM', court: '1', team1: 'Towson X', team2: 'Siblings or Married', pool: 'A', score: '-', team1Idx: 0, team2Idx: 2 },
-  { time: '1:00 PM', court: '2', team1: 'Just Roomates', team2: 'Towson Y', pool: 'A', score: '-', team1Idx: 4, team2Idx: 5 },
-  { time: '1:00 PM', court: '3', team1: 'Where is my husband', team2: 'uWu', pool: 'B', score: '-', team1Idx: 1, team2Idx: 3 },
-  { time: '1:20 PM', court: '1', team1: 'Team Fun', team2: 'Towson Y', pool: 'AB', score: '-', team1Idx: 6, team2Idx: 5 },
-  { time: '1:20 PM', court: '2', team1: 'Towson X', team2: 'Just Roomates', pool: 'A', score: '-', team1Idx: 0, team2Idx: 4 },
-  { time: '1:20 PM', court: '3', team1: 'Team 1 Bed 1 Bath 1 Den', team2: 'uWu', pool: 'B', score: '-', team1Idx: 7, team2Idx: 3 },
-  { time: '1:40 PM', court: '1', team1: 'Siblings or Married', team2: 'Towson Y', pool: 'A', score: '-', team1Idx: 2, team2Idx: 5 },
-  { time: '1:40 PM', court: '2', team1: 'Where is my husband', team2: 'Team 1 Bed 1 Bath 1 Den', pool: 'B', score: '-', team1Idx: 1, team2Idx: 7 },
-  { time: '1:40 PM', court: '3', team1: 'Towson X', team2: 'Team Fun', pool: 'AB', score: '-', team1Idx: 0, team2Idx: 6 },
-  { time: '2:00 PM', court: '1', team1: 'Just Roomates', team2: 'Siblings or Married', pool: 'A', score: '-', team1Idx: 4, team2Idx: 2 },
-  { time: '2:00 PM', court: '2', team1: 'uWu', team2: 'Where is my husband', pool: 'B', score: '-', team1Idx: 3, team2Idx: 1 },
-  { time: '2:00 PM', court: '3', team1: 'Team Fun', team2: 'Team 1 Bed 1 Bath 1 Den', pool: 'AB', score: '-', team1Idx: 6, team2Idx: 7 }
-];
-
-const INITIAL_BRACKET_MATCHES = {
-  quarterfinals: [
-    { id: 'qf1', team1: 'Pool A 1st', team2: 'Pool B 4th', score: '-', winner: null },
-    { id: 'qf2', team1: 'Pool B 2nd', team2: 'Pool A 3th', score: '-', winner: null },
-    { id: 'qf3', team1: 'Pool A 2nd', team2: 'Pool B 3rd', score: '-', winner: null },
-    { id: 'qf4', team1: 'Pool B 1st', team2: 'Pool A 4th', score: '-', winner: null }
-  ],
-  semifinals: [
-    { id: 'sf1', team1: 'Winner QF1', team2: 'Winner QF2', score: '-', winner: null },
-    { id: 'sf2', team1: 'Winner QF3', team2: 'Winner QF4', score: '-', winner: null }
-  ],
-  finals: [
-    { id: 'f1', team1: 'Winner SF1', team2: 'Winner SF2', score: '-', winner: null }
-  ],
-  consolationSemis: [
-    { id: 'csf1', team1: 'Loser QF1', team2: 'Loser QF2', score: '-', winner: null },
-    { id: 'csf2', team1: 'Loser QF3', team2: 'Loser QF4', score: '-', winner: null }
-  ],
-  consolationFinals: [
-    { id: 'cf1', team1: 'Winner CSF1', team2: 'Winner CSF2', score: '-', winner: null }
-  ]
-};
 
 const INITIAL_ALTERNATES = [
-  'Team Julia and Theo', 'Team Joel and Luke', 'Undisclosed', 'Team Adam and Vinny', 'Team PeeCeeTee'
+  'Team Julia and Theo', 'Team Joel and Luke', 'Undisclosed', 
+  'Team Adam and Vinny', 'Team PeeCeeTee', 'Team Johnny and grant', 
+  'Team Homestead', 'Team Jack', 'Team Ash'
 ];
 
-const CORRECT_PASSWORD = "turkey2024";
+function SwissTournament() {
+  const [tournamentState, setTournamentState] = useState(null);
+  const [passwordUnlocked, setPasswordUnlocked] = useState(false);
+  const [password, setPassword] = useState('');
+  const [activeTab, setActiveTab] = useState('home');
+  const [message, setMessage] = useState({ text: '', type: '' });
+  const [db, setDb] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-// --- Runtime State (Kept in memory, updated by Firestore) ---
-let tournamentState = {};
-let passwordUnlocked = false;
-let db;
+  // Form states
+  const [selectedMatch, setSelectedMatch] = useState('');
+  const [score1, setScore1] = useState('');
+  const [score2, setScore2] = useState('');
 
-// --- Template Content Generation ---
-const welcomeDescriptionHTML = `
-  <div class="welcome-section">
-    <h2>Welcome to the Turkey Tennis Doubles Invitational at Meadowbrook Local Park! 🦃🎾 </h2>
-    <h3>November 22nd, 2025</h3>
-    <p>Use the tabs above to view teams, see the schedule, and submit scores.</p>
-    <p>Pool play games will be one abbreviated set to 4 games with a 20 minute time cap.</p>
-    <p>Bracket play will be one set to 6 games with no time cap.</p>
-    <p>Court 4 (closest to the parking lot), will remain open for practice and/or community use throughout the tournament. </p>
-    <p>Do not be late to your first match.</p>
-    <p>The pools and bracket have been build to maximize the number of competitive games, while maintaining an advantage for winning.</p>
-    <p>Prize for the winning team.</p>
-    <p>Good luck to all the teams!</p>
-  </div>
-`;
+  useEffect(() => {
+    initFirebase();
+  }, []);
 
-// Generates HTML for the team cards using current state data
-const generateTeamsHTML = () => tournamentState.teams.map((team, idx) => `
-  <div class="team-card" data-team-id="${idx}">
-    <h3>${team.name}</h3>
-    <ul>
-      <li>${team.players[0]}</li>
-      <li>${team.players[1]}</li>
-    </ul>
-  </div>
-`).join('');
+  const initFirebase = async () => {
+    try {
+      const app = initializeApp(firebaseConfig);
+      const firestore = getFirestore(app);
+      setLogLevel('error');
+      const auth = getAuth(app);
+      await signInAnonymously(auth);
+      setDb(firestore);
 
-const generateAlternatesHTML = () => INITIAL_ALTERNATES.map(alt => `<li>${alt}</li>`).join('');
+      const docRef = doc(firestore, TOURNAMENT_DOC_REF);
+      
+      // Initialize if needed
+      const initialState = {
+        teams: INITIAL_TEAMS.map(t => ({ ...t, wins: 0, losses: 0, pointsFor: 0, pointsAgainst: 0 })),
+        rounds: [],
+        currentRound: 1,
+        alternates: INITIAL_ALTERNATES
+      };
+      
+      await setDoc(docRef, initialState, { merge: true });
 
-const generateTeamOptions = () => tournamentState.teams.map((team, idx) => 
-  `<option value="${idx}">${team.name}</option>`
-).join('');
-
-const generateTeamDetailsHTML = () => tournamentState.teams.map((team, idx) => `
-  <div class="team-detail">
-    <h2>${team.name}</h2>
-    <div class="team-players">
-      <strong>Players:</strong> ${team.players.join(' & ')}
-    </div>
-    <div class="team-pool">
-      <strong>Pool:</strong> ${team.pool}
-    </div>
-    <p class="team-description">${team.description}</p>
-  </div>
-`).join('');
-
-// --- Logic Functions ---
-
-const getRecords = () => {
-  const records = {};
-  tournamentState.teams.forEach((team, idx) => {
-    records[idx] = { wins: 0, losses: 0 };
-  });
-
-  tournamentState.matchSchedule.forEach(match => {
-    if (match.score !== '-') {
-      const scores = match.score.split('-').map(s => parseInt(s.trim()));
-      if (scores.length === 2 && scores[0] !== scores[1]) {
-        if (scores[0] > scores[1]) {
-          records[match.team1Idx].wins++;
-          records[match.team2Idx].losses++;
-        } else if (scores[1] > scores[0]) {
-          records[match.team2Idx].wins++;
-          records[match.team1Idx].losses++;
+      // Real-time listener
+      onSnapshot(docRef, (docSnap) => {
+        if (docSnap.exists()) {
+          setTournamentState(docSnap.data());
+          setLoading(false);
         }
+      });
+    } catch (e) {
+      console.error("Firebase error:", e);
+      setLoading(false);
+    }
+  };
+
+  const saveState = async (updates) => {
+    if (!db) return;
+    try {
+      const docRef = doc(db, TOURNAMENT_DOC_REF);
+      await setDoc(docRef, updates, { merge: true });
+    } catch (e) {
+      console.error("Save error:", e);
+      setMessage({ text: 'Error saving to database', type: 'error' });
+    }
+  };
+
+  const generateRound = async (roundNum) => {
+    if (!tournamentState) return;
+
+    const teams = [...tournamentState.teams];
+    let matches = [];
+
+    if (roundNum === 1) {
+      // Random pairing for round 1
+      const shuffled = teams.sort(() => Math.random() - 0.5);
+      const courts = ['1', '2', '3'];
+      
+      for (let i = 0; i < 3; i++) {
+        matches.push({
+          court: courts[i],
+          team1Idx: teams.indexOf(shuffled[i * 2]),
+          team2Idx: teams.indexOf(shuffled[i * 2 + 1]),
+          team1Name: shuffled[i * 2].name,
+          team2Name: shuffled[i * 2 + 1].name,
+          score1: null,
+          score2: null,
+          completed: false
+        });
       }
+      
+      // Bye teams
+      matches.push({
+        court: 'BYE',
+        team1Idx: teams.indexOf(shuffled[6]),
+        team2Idx: teams.indexOf(shuffled[7]),
+        team1Name: shuffled[6].name,
+        team2Name: shuffled[7].name,
+        score1: null,
+        score2: null,
+        completed: false
+      });
+    } else {
+      // Swiss pairing: sort by record, pair 1v2, 3v4, etc.
+      const sortedTeams = teams.map((t, idx) => ({ ...t, idx }))
+        .sort((a, b) => {
+          if (b.wins !== a.wins) return b.wins - a.wins;
+          const aDiff = a.pointsFor - a.pointsAgainst;
+          const bDiff = b.pointsFor - b.pointsAgainst;
+          return bDiff - aDiff;
+        });
+
+      const courts = ['1', '2', '3'];
+      for (let i = 0; i < 3; i++) {
+        matches.push({
+          court: courts[i],
+          team1Idx: sortedTeams[i * 2].idx,
+          team2Idx: sortedTeams[i * 2 + 1].idx,
+          team1Name: sortedTeams[i * 2].name,
+          team2Name: sortedTeams[i * 2 + 1].name,
+          score1: null,
+          score2: null,
+          completed: false
+        });
+      }
+
+      matches.push({
+        court: 'BYE',
+        team1Idx: sortedTeams[6].idx,
+        team2Idx: sortedTeams[7].idx,
+        team1Name: sortedTeams[6].name,
+        team2Name: sortedTeams[7].name,
+        score1: null,
+        score2: null,
+        completed: false
+      });
     }
-  });
 
-  return records;
-};
+    const newRounds = [...tournamentState.rounds];
+    newRounds[roundNum - 1] = { roundNum, matches };
 
-const generatePoolPlayHTML = () => {
-  if (!tournamentState.matchSchedule) return '<div>Loading schedule...</div>';
-  return `
-    <div class="pools-container">
-      <div class="pool">
-        <h3>Pool Play Schedule & Scores</h3>
-        <div class="table-responsive">
-          <table class="standings-table">
-            <thead>
-              <tr>
-                <th>Time</th>
-                <th>Court</th>
-                <th>Team 1</th>
-                <th>Team 2</th>
-                <th>Score</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${tournamentState.matchSchedule.map((match, idx) => `
-                <tr>
-                  <td>${match.time}</td>
-                  <td>${match.court}</td>
-                  <td>${match.team1}</td>
-                  <td>${match.team2}</td>
-                  <td class="score-cell" data-match-idx="${idx}">${match.score}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  `;
-};
+    await saveState({ rounds: newRounds, currentRound: roundNum });
+    setMessage({ text: `Round ${roundNum} generated!`, type: 'success' });
+  };
 
-const generateStandingsHTML = () => {
-  if (!tournamentState.teams) return '<div>Loading standings...</div>';
-  const records = getRecords();
-  
-  const poolATeams = tournamentState.teams.filter(t => t.pool === 'A').map(team => {
-    const teamIdx = tournamentState.teams.indexOf(team);
-    return { ...team, teamIdx, record: records[teamIdx] };
-  }).sort((a, b) => b.record.wins - a.record.wins);
-  
-  const poolBTeams = tournamentState.teams.filter(t => t.pool === 'B').map(team => {
-    const teamIdx = tournamentState.teams.indexOf(team);
-    return { ...team, teamIdx, record: records[teamIdx] };
-  }).sort((a, b) => b.record.wins - a.record.wins);
+  const submitScore = async () => {
+    if (!tournamentState || !selectedMatch) return;
 
-  return `
-    <div class="pools-container">
-      <div class="pool">
-        <h3>Pool A Standings</h3>
-        <div class="table-responsive">
-          <table class="standings-table">
-            <thead>
-              <tr>
-                <th>Rank</th>
-                <th>Team</th>
-                <th>Record</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${poolATeams.map((team, idx) => `
-                <tr>
-                  <td>${idx + 1}</td>
-                  <td>${team.name}</td>
-                  <td>${team.record.wins}-${team.record.losses}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="pool">
-        <h3>Pool B Standings</h3>
-        <div class="table-responsive">
-          <table class="standings-table">
-            <thead>
-              <tr>
-                <th>Rank</th>
-                <th>Team</th>
-                <th>Record</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${poolBTeams.map((team, idx) => `
-                <tr>
-                  <td>${idx + 1}</td>
-                  <td>${team.name}</td>
-                  <td>${team.record.wins}-${team.record.losses}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  `;
-};
+    const [roundIdx, matchIdx] = selectedMatch.split('-').map(Number);
+    const s1 = parseInt(score1);
+    const s2 = parseInt(score2);
 
-const generateBracketsHTML = () => {
-  if (!tournamentState.bracketMatches) return '<div>Loading brackets...</div>';
-  
-  const renderMatch = (match) => `
-    <div class="bracket-match">
-      <div class="bracket-team">${match.team1}</div>
-      <div class="bracket-team">${match.team2}</div>
-      <div class="bracket-score">${match.score}</div>
-    </div>
-  `;
-  
-  const b = tournamentState.bracketMatches;
-  
-  const bracketHTML = `
-    <div class="bracket-container">
-      <div class="bracket-round">
-        <h3>Quarterfinals</h3>
-        ${b.quarterfinals.map(renderMatch).join('')}
-      </div>
-      
-      <div class="bracket-round">
-        <h3>Semifinals</h3>
-        ${b.semifinals.map(renderMatch).join('')}
-      </div>
-      
-      <div class="bracket-round">
-        <h3>Finals</h3>
-        ${b.finals.map(renderMatch).join('')}
-      </div>
-      
-      <div class="bracket-round">
-        <h3>Champion</h3>
-        <div class="bracket-champion">
-          <div class="bracket-team">${b.finals[0].winner || 'TBD'}</div>
-        </div>
-      </div>
-    </div>
-  `;
-  
-  const consolationHTML = `
-    <div class="bracket-container">
-      <div class="bracket-round">
-        <h3>Consolation Semifinals</h3>
-        ${b.consolationSemis.map(renderMatch).join('')}
-      </div>
-      
-      <div class="bracket-round">
-        <h3>Consolation Finals</h3>
-        ${b.consolationFinals.map(renderMatch).join('')}
-      </div>
-      
-      <div class="bracket-round">
-        <h3>5th Place</h3>
-        <div class="bracket-champion consolation-winner">
-          <div class="bracket-team">${b.consolationFinals[0].winner || 'TBD'}</div>
-        </div>
-      </div>
-    </div>
-  `;
-  
-  return `
-    <div class="bracket-section">
-      <h3>Championship Bracket</h3>
-      ${bracketHTML}
-      <h3 style="margin-top: 3rem;">Consolation Bracket</h3>
-      ${consolationHTML}
-    </div>
-  `;
-};
-
-// --- Firebase Data Management ---
-
-/**
- * Saves the current tournamentState object back to Firestore.
- * This function handles all writes to the database.
- */
-const saveState = async (newState) => {
-  if (!db) return console.error("Firestore not initialized.");
-  try {
-    const docRef = doc(db, TOURNAMENT_DOC_REF);
-    // Merge new state into the existing state
-    await setDoc(docRef, newState, { merge: true });
-    console.log("Tournament state saved successfully.");
-  } catch (e) {
-    console.error("Error saving state:", e);
-    // Display error message on UI if possible
-    const resultDiv = document.getElementById('result');
-    if(resultDiv) {
-        resultDiv.textContent = 'Error: Could not save score to database.';
-        resultDiv.className = 'result error';
+    if (isNaN(s1) || isNaN(s2) || s1 < 0 || s2 < 0) {
+      setMessage({ text: 'Invalid scores', type: 'error' });
+      return;
     }
-  }
-};
 
-/**
- * Initializes the tournament document in Firestore if it doesn't exist.
- */
-const initializeTournamentData = async () => {
-  if (!db) return;
-  const docRef = doc(db, TOURNAMENT_DOC_REF);
-  const docSnap = await getDoc(docRef);
+    const newRounds = [...tournamentState.rounds];
+    const match = newRounds[roundIdx].matches[matchIdx];
+    
+    if (match.completed) {
+      setMessage({ text: 'Score already submitted', type: 'error' });
+      return;
+    }
 
-  if (!docSnap.exists()) {
-    console.log("No existing tournament data found. Initializing new tournament.");
-    const initialData = {
-      teams: INITIAL_TEAMS,
-      matchSchedule: INITIAL_SCHEDULE,
-      bracketMatches: INITIAL_BRACKET_MATCHES,
-      bracketPlayActive: false,
+    match.score1 = s1;
+    match.score2 = s2;
+    match.completed = true;
+
+    const newTeams = [...tournamentState.teams];
+    
+    // Update team records
+    newTeams[match.team1Idx].pointsFor += s1;
+    newTeams[match.team1Idx].pointsAgainst += s2;
+    newTeams[match.team2Idx].pointsFor += s2;
+    newTeams[match.team2Idx].pointsAgainst += s1;
+
+    if (s1 > s2) {
+      newTeams[match.team1Idx].wins++;
+      newTeams[match.team2Idx].losses++;
+    } else if (s2 > s1) {
+      newTeams[match.team2Idx].wins++;
+      newTeams[match.team1Idx].losses++;
+    } else {
+      // Tie - both get 0.5 wins
+      newTeams[match.team1Idx].wins += 0.5;
+      newTeams[match.team1Idx].losses += 0.5;
+      newTeams[match.team2Idx].wins += 0.5;
+      newTeams[match.team2Idx].losses += 0.5;
+    }
+
+    await saveState({ rounds: newRounds, teams: newTeams });
+    setMessage({ text: `Score submitted: ${match.team1Name} ${s1} - ${s2} ${match.team2Name}`, type: 'success' });
+    setSelectedMatch('');
+    setScore1('');
+    setScore2('');
+  };
+
+  const resetTournament = async () => {
+    if (!window.confirm('Are you sure you want to reset the entire tournament?')) return;
+    
+    const initialState = {
+      teams: INITIAL_TEAMS.map(t => ({ ...t, wins: 0, losses: 0, pointsFor: 0, pointsAgainst: 0 })),
+      rounds: [],
+      currentRound: 1,
       alternates: INITIAL_ALTERNATES
     };
-    // Use setDoc without merge to create the initial document
-    await setDoc(docRef, initialData); 
+    
+    await saveState(initialState);
+    setMessage({ text: 'Tournament reset!', type: 'error' });
+  };
+
+  if (loading) {
+    return <div className="flex items-center justify-center min-h-screen bg-orange-50">
+      <div className="text-2xl font-bold text-orange-800">Loading Tournament...</div>
+    </div>;
   }
-};
 
-/**
- * Renders the entire application UI based on the current tournamentState.
- */
-const renderApp = () => {
-  const appDiv = document.getElementById('app');
-  if (!appDiv || !tournamentState.teams) return; // Wait until data is loaded
+  if (!tournamentState) {
+    return <div className="flex items-center justify-center min-h-screen bg-orange-50">
+      <div className="text-2xl font-bold text-red-600">Error loading tournament data</div>
+    </div>;
+  }
 
-  try {
-    // The main template relies on the data being loaded
-    appDiv.innerHTML = `
-      <div>
-        <h1>Turkey Tennis Doubles Invitational</h1>
-        <div class="tabs">
-          <button class="tab-button active" data-tab="home">Home</button>
-          <button class="tab-button" data-tab="schedule">Schedule and Results</button>
-          <button class="tab-button" data-tab="scores">Submit Scores</button>
-          <button class="tab-button" data-tab="teams">Team Details</button>
+  const sortedStandings = [...tournamentState.teams]
+    .map((t, idx) => ({ ...t, idx }))
+    .sort((a, b) => {
+      if (b.wins !== a.wins) return b.wins - a.wins;
+      const aDiff = a.pointsFor - a.pointsAgainst;
+      const bDiff = b.pointsFor - b.pointsAgainst;
+      return bDiff - aDiff;
+    });
+
+  return (
+    <div className="min-h-screen bg-orange-50">
+      <div className="max-w-7xl mx-auto p-4">
+        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+          <h1 className="text-4xl font-bold text-orange-800 text-center mb-2">
+            🦃 Turkey Tennis Swiss Draw Tournament 🎾
+          </h1>
+          <p className="text-center text-gray-600">November 22nd, 2025 - Meadowbrook Local Park</p>
         </div>
-        <div class="tab-content">
-          <div id="home" class="tab-pane active">
-            ${welcomeDescriptionHTML}
-            
-            <div class="teams-section">
-              <h2>Participating Teams</h2>
-              <div class="teams-grid">
-                ${generateTeamsHTML()}
-              </div>
-            </div>
-            <div class="alternates-section">
-              <h2>Alternates</h2>
-              <ul class="alternates-list">
-                ${generateAlternatesHTML()}
+
+        {/* Tabs */}
+        <div className="flex gap-2 mb-6 overflow-x-auto">
+          {['home', 'schedule', 'standings', 'scores', 'teams'].map(tab => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-6 py-3 rounded-lg font-semibold capitalize transition ${
+                activeTab === tab
+                  ? 'bg-orange-600 text-white'
+                  : 'bg-white text-orange-800 hover:bg-orange-100'
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+
+        {/* Home Tab */}
+        {activeTab === 'home' && (
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h2 className="text-3xl font-bold text-orange-800 mb-4">Welcome!</h2>
+            <div className="prose max-w-none mb-8">
+              <p className="text-lg">This is a <strong>Swiss Draw Tournament</strong> with {TOTAL_ROUNDS} rounds.</p>
+              <ul className="list-disc pl-6 space-y-2">
+                <li>All teams play {TOTAL_ROUNDS} rounds - no elimination</li>
+                <li>After each round, teams are paired based on their current record</li>
+                <li>Teams with similar records play each other</li>
+                <li>Each game is 20 minutes with 3 courts available</li>
+                <li>Final standings determined by wins, then point differential</li>
+                <li>Since we have 8 teams and 3 courts, 2 teams get a bye each round</li>
               </ul>
             </div>
+
+            <h3 className="text-2xl font-bold text-orange-800 mb-4">Participating Teams</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+              {tournamentState.teams.map((team, idx) => (
+                <div key={idx} className="bg-orange-100 rounded-lg p-4 border-2 border-orange-300">
+                  <h4 className="font-bold text-orange-900 mb-2">{team.name}</h4>
+                  <p className="text-sm text-gray-700">{team.players.join(' & ')}</p>
+                </div>
+              ))}
+            </div>
+
+            <h3 className="text-2xl font-bold text-orange-800 mb-4">Alternates</h3>
+            <ul className="list-disc pl-6 space-y-1">
+              {tournamentState.alternates.map((alt, idx) => (
+                <li key={idx} className="text-gray-700">{alt}</li>
+              ))}
+            </ul>
           </div>
-          <div id="schedule" class="tab-pane">
-            <h2>Schedule and Results</h2>
-            <div class="subtabs">
-              <button class="subtab-button active" data-subtab="pool-play">Pool Play</button>
-              <button class="subtab-button" data-subtab="standings">Standings</button>
-              <button class="subtab-button" data-subtab="brackets">Brackets</button>
-            </div>
-            <div class="subtab-content">
-              <div id="pool-play" class="subtab-pane active">
-                ${generatePoolPlayHTML()}
-              </div>
-              <div id="standings" class="subtab-pane">
-                ${generateStandingsHTML()}
-              </div>
-              <div id="brackets" class="subtab-pane">
-                ${generateBracketsHTML()}
-              </div>
+        )}
+
+        {/* Schedule Tab */}
+        {activeTab === 'schedule' && (
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h2 className="text-3xl font-bold text-orange-800 mb-6">Schedule & Results</h2>
+            
+            {[...Array(TOTAL_ROUNDS)].map((_, roundIdx) => {
+              const round = tournamentState.rounds[roundIdx];
+              return (
+                <div key={roundIdx} className="mb-8">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-2xl font-bold text-orange-700">Round {roundIdx + 1}</h3>
+                    {!round && roundIdx + 1 === tournamentState.currentRound && passwordUnlocked && (
+                      <button
+                        onClick={() => generateRound(roundIdx + 1)}
+                        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                      >
+                        Generate Round {roundIdx + 1}
+                      </button>
+                    )}
+                  </div>
+
+                  {round ? (
+                    <div className="overflow-x-auto">
+                      <table className="w-full border-collapse">
+                        <thead>
+                          <tr className="bg-orange-200">
+                            <th className="border p-2">Court</th>
+                            <th className="border p-2">Team 1</th>
+                            <th className="border p-2">Team 2</th>
+                            <th className="border p-2">Score</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {round.matches.map((match, matchIdx) => (
+                            <tr key={matchIdx} className={match.court === 'BYE' ? 'bg-gray-100' : ''}>
+                              <td className="border p-2 text-center font-bold">{match.court}</td>
+                              <td className="border p-2">{match.team1Name}</td>
+                              <td className="border p-2">{match.team2Name}</td>
+                              <td className="border p-2 text-center font-bold">
+                                {match.completed 
+                                  ? `${match.score1} - ${match.score2}`
+                                  : match.court === 'BYE' ? 'Bye Round' : '-'}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : (
+                    <p className="text-gray-500 italic">Round not yet generated</p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Standings Tab */}
+        {activeTab === 'standings' && (
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h2 className="text-3xl font-bold text-orange-800 mb-6">Current Standings</h2>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="bg-orange-200">
+                    <th className="border p-3">Rank</th>
+                    <th className="border p-3">Team</th>
+                    <th className="border p-3">Wins</th>
+                    <th className="border p-3">Losses</th>
+                    <th className="border p-3">Points For</th>
+                    <th className="border p-3">Points Against</th>
+                    <th className="border p-3">Differential</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sortedStandings.map((team, idx) => (
+                    <tr key={idx} className={idx === 0 ? 'bg-yellow-100 font-bold' : ''}>
+                      <td className="border p-3 text-center">{idx + 1}</td>
+                      <td className="border p-3">{team.name}</td>
+                      <td className="border p-3 text-center">{team.wins}</td>
+                      <td className="border p-3 text-center">{team.losses}</td>
+                      <td className="border p-3 text-center">{team.pointsFor}</td>
+                      <td className="border p-3 text-center">{team.pointsAgainst}</td>
+                      <td className="border p-3 text-center font-bold">
+                        {team.pointsFor - team.pointsAgainst > 0 ? '+' : ''}
+                        {team.pointsFor - team.pointsAgainst}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
-          <div id="scores" class="tab-pane">
-            <h2>Submit Scores</h2>
-            <div class="password-section" id="password-section" style="display: ${passwordUnlocked ? 'none' : 'block'};">
-              <div class="form-group">
-                <label for="password">Enter Password:</label>
-                <input type="password" id="password" placeholder="Enter password">
+        )}
+
+        {/* Scores Tab */}
+        {activeTab === 'scores' && (
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h2 className="text-3xl font-bold text-orange-800 mb-6">Submit Scores</h2>
+
+            {!passwordUnlocked ? (
+              <div className="max-w-md">
+                <label className="block mb-2 font-semibold">Enter Password:</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full p-2 border rounded mb-4"
+                  placeholder="Password"
+                />
+                <button
+                  onClick={() => {
+                    if (password === CORRECT_PASSWORD) {
+                      setPasswordUnlocked(true);
+                      setMessage({ text: 'Unlocked!', type: 'success' });
+                    } else {
+                      setMessage({ text: 'Incorrect password', type: 'error' });
+                    }
+                  }}
+                  className="w-full bg-orange-600 text-white py-2 rounded hover:bg-orange-700"
+                >
+                  Unlock
+                </button>
               </div>
-              <button id="passwordBtn" class="submit-btn">Unlock</button>
-              <div id="password-result" class="result"></div>
-            </div>
-            <div class="score-form" id="score-form" style="display: ${passwordUnlocked ? 'block' : 'none'};">
-              <div id="pool-play-section" style="display: ${tournamentState.bracketPlayActive ? 'none' : 'block'};">
-                <h3>Pool Play Scores</h3>
-                <div class="form-group">
-                  <label for="match-select">Select Match:</label>
-                  <select id="match-select">
+            ) : (
+              <div>
+                <div className="max-w-md mb-6">
+                  <label className="block mb-2 font-semibold">Select Match:</label>
+                  <select
+                    value={selectedMatch}
+                    onChange={(e) => setSelectedMatch(e.target.value)}
+                    className="w-full p-2 border rounded mb-4"
+                  >
                     <option value="">Choose a match...</option>
-                    ${tournamentState.matchSchedule.map((match, idx) => `
-                      <option value="${idx}">${match.time} - Court ${match.court}: ${match.team1} vs ${match.team2} (${match.score !== '-' ? 'SCORED' : 'PENDING'})</option>
-                    `).join('')}
+                    {tournamentState.rounds.map((round, roundIdx) =>
+                      round.matches.map((match, matchIdx) =>
+                        !match.completed && match.court !== 'BYE' && (
+                          <option key={`${roundIdx}-${matchIdx}`} value={`${roundIdx}-${matchIdx}`}>
+                            Round {roundIdx + 1} - Court {match.court}: {match.team1Name} vs {match.team2Name}
+                          </option>
+                        )
+                      )
+                    )}
                   </select>
+
+                  <label className="block mb-2 font-semibold">Team 1 Score:</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={score1}
+                    onChange={(e) => setScore1(e.target.value)}
+                    className="w-full p-2 border rounded mb-4"
+                  />
+
+                  <label className="block mb-2 font-semibold">Team 2 Score:</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={score2}
+                    onChange={(e) => setScore2(e.target.value)}
+                    className="w-full p-2 border rounded mb-4"
+                  />
+
+                  <button
+                    onClick={submitScore}
+                    className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 mb-4"
+                  >
+                    Submit Score
+                  </button>
+
+                  <button
+                    onClick={resetTournament}
+                    className="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700"
+                  >
+                    Reset Tournament
+                  </button>
                 </div>
-                <div class="form-group">
-                  <label for="score1">Team 1 Score:</label>
-                  <input type="number" id="score1" min="0" placeholder="0">
-                </div>
-                <div class="form-group">
-                  <label for="score2">Team 2 Score:</label>
-                  <input type="number" id="score2" min="0" placeholder="0">
-                </div>
-                <button id="submitBtn" class="submit-btn">Submit Pool Score</button>
-                <button id="concludeBtn" class="submit-btn" style="margin-top: 1rem; background-color: #28a745;">Conclude Pool Play & Start Bracket</button>
               </div>
-              
-              <div id="bracket-play-section" style="display: ${tournamentState.bracketPlayActive ? 'block' : 'none'};">
-                <h3>Bracket Play Scores</h3>
-                <div class="form-group">
-                  <label for="bracket-match-select">Select Bracket Match:</label>
-                  <select id="bracket-match-select">
-                    <option value="">Choose a bracket match...</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="bracket-score1">Team 1 Score:</label>
-                  <input type="number" id="bracket-score1" min="0" placeholder="0">
-                </div>
-                <div class="form-group">
-                  <label for="bracket-score2">Team 2 Score:</label>
-                  <input type="number" id="bracket-score2" min="0" placeholder="0">
-                </div>
-                <button id="submitBracketBtn" class="submit-btn">Submit Bracket Score</button>
+            )}
+
+            {message.text && (
+              <div className={`mt-4 p-4 rounded ${
+                message.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+              }`}>
+                {message.text}
               </div>
-              
-              <button id="resetBtn" class="submit-btn" style="margin-top: 2rem; background-color: #dc3545;">Reset Tournament</button>
-              <div id="result" class="result"></div>
+            )}
+          </div>
+        )}
+
+        {/* Teams Tab */}
+        {activeTab === 'teams' && (
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h2 className="text-3xl font-bold text-orange-800 mb-6">Team Details</h2>
+            <div className="space-y-6">
+              {tournamentState.teams.map((team, idx) => (
+                <div key={idx} className="border-2 border-orange-300 rounded-lg p-6 bg-orange-50">
+                  <h3 className="text-2xl font-bold text-orange-900 mb-2">{team.name}</h3>
+                  <p className="text-lg mb-2"><strong>Players:</strong> {team.players.join(' & ')}</p>
+                  <p className="text-gray-700 italic">{team.description}</p>
+                </div>
+              ))}
             </div>
           </div>
-          <div id="teams" class="tab-pane">
-            <h2>Team Details</h2>
-            <div class="team-details-container">
-              ${generateTeamDetailsHTML()}
-            </div>
-          </div>
-        </div>
+        )}
       </div>
-    `;
-    // After rendering, re-attach event listeners
-    attachEventListeners();
-    // Ensure the default visible tabs/subtabs are active and updated
-    switchTab('home'); 
-    switchSubtab('pool-play');
-    if (tournamentState.bracketPlayActive) {
-        updateBracketMatchSelect();
-    }
+    </div>
+  );
+}
 
-    // Hide loading screen and show the app only AFTER successful rendering
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-
-  } catch (e) {
-    console.error("Critical Rendering Error:", e);
-    // If rendering fails, display a controlled error message in the main div
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    appDiv.innerHTML = `<div style="color: red; padding: 2rem;">CRITICAL RENDERING ERROR: Failed to build the page content. Check the console (F12) for JavaScript errors.</div>`;
-  }
-};
-
-const switchTab = (tabName) => {
-  document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-  document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
-
-  const tabButton = document.querySelector(`[data-tab="${tabName}"]`);
-  const tabPane = document.getElementById(tabName);
-  
-  // Use simple display/class logic as the template is fully regenerated
-  if (tabButton && tabPane) {
-      tabButton.classList.add('active');
-      tabPane.classList.add('active');
-  }
-};
-
-const switchSubtab = (subtabName) => {
-  document.querySelectorAll('.subtab-button').forEach(btn => btn.classList.remove('active'));
-  document.querySelectorAll('.subtab-pane').forEach(pane => pane.classList.remove('active'));
-
-  const currentTabButton = document.querySelector(`[data-subtab="${subtabName}"]`);
-  const currentTabPane = document.getElementById(subtabName);
-  
-  if (currentTabButton && currentTabPane) {
-      currentTabButton.classList.add('active');
-      currentTabPane.classList.add('active');
-  }
-};
-
-const updateBracketMatchSelect = () => {
-  const select = document.getElementById('bracket-match-select');
-  if (!select) return; 
-  select.innerHTML = '<option value="">Choose a bracket match...</option>';
-  
-  const b = tournamentState.bracketMatches;
-  
-  const sections = [
-    { round: 'qf', matches: b.quarterfinals, prefix: 'Quarterfinal' },
-    { round: 'sf', matches: b.semifinals, prefix: 'Semifinal' },
-    { round: 'f', matches: b.finals, prefix: 'Finals' },
-    { round: 'csf', matches: b.consolationSemis, prefix: 'Consolation Semifinal' },
-    { round: 'cf', matches: b.consolationFinals, prefix: 'Consolation Finals' }
-  ];
-
-  sections.forEach(({ round, matches, prefix }) => {
-    matches.forEach((match, idx) => {
-      // Check if match teams are finalized and score is not submitted
-      const isPlaceholder = match.team1.includes('Pool') || match.team1.includes('Winner') || match.team1.includes('Loser') || match.team1.includes('TBD');
-      
-      if (match.score === '-' && !isPlaceholder) {
-        let name = `${prefix} ${round !== 'f' && round !== 'cf' ? idx + 1 : ''}`.trim();
-        select.innerHTML += `<option value="${round}-${idx}">${name}: ${match.team1} vs ${match.team2}</option>`;
-      }
-    });
-  });
-};
-
-// --- Event Listeners ---
-
-const attachEventListeners = () => {
-  // Use event delegation on the main app div
-  const appDiv = document.getElementById('app');
-  if (!appDiv) return;
-
-  // Since renderApp completely regenerates all HTML, we must attach listeners every time.
-  // Using event delegation on the root div for tabs/subtabs is more efficient.
-  
-  // Clear any existing listeners first if possible (though the innerHTML clear often handles this).
-  appDiv.onclick = (e) => {
-      if (e.target.classList.contains('tab-button') && e.target.getAttribute('data-tab')) {
-        switchTab(e.target.getAttribute('data-tab'));
-      } else if (e.target.classList.contains('subtab-button') && e.target.getAttribute('data-subtab')) {
-        switchSubtab(e.target.getAttribute('data-subtab'));
-      } else if (e.target.classList.contains('team-card') && e.target.getAttribute('data-team-id')) {
-        switchTab('teams');
-      }
-  };
-
-
-  // --- Password Unlock ---
-  const passwordBtn = document.getElementById('passwordBtn');
-  if (passwordBtn) passwordBtn.onclick = () => {
-    const password = document.getElementById('password').value;
-    const resultDiv = document.getElementById('password-result');
-
-    if (password === CORRECT_PASSWORD) {
-      passwordUnlocked = true;
-      renderApp(); // Rerender to show the score forms
-      resultDiv.textContent = 'Unlocked!';
-      resultDiv.className = 'result success';
-    } else {
-      resultDiv.textContent = 'Incorrect password';
-      resultDiv.className = 'result error';
-    }
-  };
-
-  // --- Pool Play Score Submission ---
-  const submitBtn = document.getElementById('submitBtn');
-  if (submitBtn) submitBtn.onclick = async () => {
-    if (!passwordUnlocked) return; 
-
-    const matchIdx = parseInt(document.getElementById('match-select').value);
-    const score1 = parseInt(document.getElementById('score1').value);
-    const score2 = parseInt(document.getElementById('score2').value);
-    const resultDiv = document.getElementById('result');
-
-    if (isNaN(matchIdx) || matchIdx < 0 || isNaN(score1) || isNaN(score2)) {
-      resultDiv.textContent = 'Please select a match and enter valid scores';
-      resultDiv.className = 'result error';
-      return;
-    }
-    
-    if (tournamentState.matchSchedule[matchIdx].score !== '-') {
-        resultDiv.textContent = 'Score already submitted for this match.';
-        resultDiv.className = 'result error';
-        return;
-    }
-
-    const match = tournamentState.matchSchedule[matchIdx];
-    let winner, newSchedule = [...tournamentState.matchSchedule];
-
-    if (score1 === score2) {
-      newSchedule[matchIdx].score = `${score1} - ${score2}`;
-      await saveState({ matchSchedule: newSchedule });
-      resultDiv.textContent = `${match.team1} ${score1} - ${score2} ${match.team2} (Tied)`;
-      resultDiv.className = 'result tie';
-      return;
-    }
-
-    winner = score1 > score2 ? match.team1 : match.team2;
-    newSchedule[matchIdx].score = `${score1} - ${score2}`;
-
-    await saveState({ matchSchedule: newSchedule });
-    
-    resultDiv.textContent = `${match.team1} ${score1} - ${score2} ${match.team2} | Winner: ${winner}`;
-    resultDiv.className = 'result success';
-    
-    // Clear form fields
-    document.getElementById('match-select').value = '';
-    document.getElementById('score1').value = '';
-    document.getElementById('score2').value = '';
-  };
-
-  // --- Conclude Pool Play Button ---
-  const concludeBtn = document.getElementById('concludeBtn');
-  if (concludeBtn) concludeBtn.onclick = async () => {
-    
-    const records = getRecords();
-    
-    const poolATeams = tournamentState.teams.filter(t => t.pool === 'A').map(team => {
-      const teamIdx = tournamentState.teams.indexOf(team);
-      return { ...team, teamIdx, record: records[teamIdx] };
-    }).sort((a, b) => b.record.wins - a.record.wins);
-    
-    const poolBTeams = tournamentState.teams.filter(t => t.pool === 'B').map(team => {
-      const teamIdx = tournamentState.teams.indexOf(team);
-      return { ...team, teamIdx, record: records[teamIdx] };
-    }).sort((a, b) => b.record.wins - a.record.wins);
-    
-    let newBracketMatches = JSON.parse(JSON.stringify(tournamentState.bracketMatches)); 
-    
-    // Seed the bracket (Top 4 from each pool)
-    newBracketMatches.quarterfinals[0].team1 = poolATeams[0].name;
-    newBracketMatches.quarterfinals[0].team2 = poolBTeams[3].name;
-    newBracketMatches.quarterfinals[1].team1 = poolBTeams[1].name;
-    newBracketMatches.quarterfinals[1].team2 = poolATeams[2].name;
-    newBracketMatches.quarterfinals[2].team1 = poolATeams[1].name;
-    newBracketMatches.quarterfinals[2].team2 = poolBTeams[3].name;
-    newBracketMatches.quarterfinals[3].team1 = poolBTeams[0].name;
-    newBracketMatches.quarterfinals[3].team2 = poolATeams[3].name;
-    
-    await saveState({
-        bracketMatches: newBracketMatches,
-        bracketPlayActive: true
-    });
-    
-    document.getElementById('result').textContent = 'Pool play concluded! Bracket play has begun.';
-    document.getElementById('result').className = 'result success';
-  };
-
-  // --- Bracket Score Submission ---
-  const submitBracketBtn = document.getElementById('submitBracketBtn');
-  if (submitBracketBtn) submitBracketBtn.onclick = async () => {
-    const matchId = document.getElementById('bracket-match-select').value;
-    const score1 = parseInt(document.getElementById('bracket-score1').value);
-    const score2 = parseInt(document.getElementById('bracket-score2').value);
-    const resultDiv = document.getElementById('result');
-    
-    if (!matchId || isNaN(score1) || isNaN(score2) || score1 === score2) {
-      resultDiv.textContent = 'Please select a match and enter valid (non-tied) scores';
-      resultDiv.className = 'result error';
-      return;
-    }
-    
-    const [round, idxStr] = matchId.split('-');
-    const idx = parseInt(idxStr);
-    
-    let newBracketMatches = JSON.parse(JSON.stringify(tournamentState.bracketMatches));
-    let match, winner, loser;
-
-    const updateAndPropagate = (matchArray, index, successorLogic) => {
-      match = matchArray[index];
-      winner = score1 > score2 ? match.team1 : match.team2;
-      loser = score1 > score2 ? match.team2 : match.team1;
-      match.score = `${score1} - ${score2}`;
-      match.winner = winner;
-      successorLogic(winner, loser);
-    };
-
-    if (round === 'qf') {
-      updateAndPropagate(newBracketMatches.quarterfinals, idx, (w, l) => {
-        if (idx === 0) { newBracketMatches.semifinals[0].team1 = w; newBracketMatches.consolationSemis[0].team1 = l; } 
-        else if (idx === 1) { newBracketMatches.semifinals[0].team2 = w; newBracketMatches.consolationSemis[0].team2 = l; } 
-        else if (idx === 2) { newBracketMatches.semifinals[1].team1 = w; newBracketMatches.consolationSemis[1].team1 = l; } 
-        else if (idx === 3) { newBracketMatches.semifinals[1].team2 = w; newBracketMatches.consolationSemis[1].team2 = l; }
-      });
-    } else if (round === 'sf') {
-      updateAndPropagate(newBracketMatches.semifinals, idx, (w) => {
-        if (idx === 0) { newBracketMatches.finals[0].team1 = w; } 
-        else if (idx === 1) { newBracketMatches.finals[0].team2 = w; }
-      });
-    } else if (round === 'f') {
-      updateAndPropagate(newBracketMatches.finals, idx, () => {});
-    } else if (round === 'csf') {
-      updateAndPropagate(newBracketMatches.consolationSemis, idx, (w) => {
-        if (idx === 0) { newBracketMatches.consolationFinals[0].team1 = w; } 
-        else if (idx === 1) { newBracketMatches.consolationFinals[0].team2 = w; }
-      });
-    } else if (round === 'cf') {
-      updateAndPropagate(newBracketMatches.consolationFinals, idx, () => {});
-    }
-    
-    await saveState({ bracketMatches: newBracketMatches });
-
-    resultDiv.textContent = `Score submitted: ${match.team1} ${score1} - ${score2} ${match.team2} | Winner: ${winner}`;
-    resultDiv.className = 'result success';
-
-    // Clear form fields
-    document.getElementById('bracket-match-select').value = '';
-    document.getElementById('bracket-score1').value = '';
-    document.getElementById('bracket-score2').value = '';
-  };
-
-  // --- Reset Tournament Button ---
-  const resetBtn = document.getElementById('resetBtn');
-  if (resetBtn) resetBtn.onclick = async () => {
-    // Create the full initial state object and overwrite the database
-    const fullInitialState = {
-      teams: INITIAL_TEAMS,
-      matchSchedule: INITIAL_SCHEDULE,
-      bracketMatches: INITIAL_BRACKET_MATCHES,
-      bracketPlayActive: false,
-      alternates: INITIAL_ALTERNATES
-    };
-    
-    await saveState(fullInitialState); // Overwrite database
-
-    document.getElementById('result').textContent = 'Tournament has been reset!';
-    document.getElementById('result').className = 'result error';
-  };
-};
-
-// --- Initialization and Real-Time Listener ---
-
-const startApp = async () => {
-  const loadingDiv = document.getElementById('loading');
-  const appDiv = document.getElementById('app');
-
-  // CRITICAL CHECK: Ensure Firebase configuration is not empty
-  if (Object.keys(firebaseConfig).length === 0) {
-      if (loadingDiv) {
-          loadingDiv.innerHTML = `<div style="color: red; padding: 2rem; font-weight: bold;">FATAL ERROR: Firebase Configuration is Missing. Cannot connect to database.</div>`;
-      }
-      return;
-  }
-  
-  try {
-    const app = initializeApp(firebaseConfig);
-    db = getFirestore(app);
-    setLogLevel('error'); // Hide verbose logs
-    const auth = getAuth(app);
-    
-    if (initialAuthToken) {
-        await signInWithCustomToken(auth, initialAuthToken);
-    } else {
-        await signInAnonymously(auth);
-    }
-    
-    console.log("Firebase authenticated successfully.");
-
-    await initializeTournamentData();
-
-    // Set up real-time listener (onSnapshot)
-    const docRef = doc(db, TOURNAMENT_DOC_REF);
-    onSnapshot(docRef, (docSnap) => {
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        // Update local state with Firestore data
-        tournamentState = data;
-        
-        // Rerender the entire UI with the latest data
-        renderApp();
-      } else {
-        console.warn("Tournament state document does not exist. A new one should be initialized shortly.");
-      }
-    });
-
-  } catch (e) {
-    console.error("Firebase Initialization Failed:", e);
-    // If Firebase fails completely, show an error on the loading screen
-    if (loadingDiv) {
-        loadingDiv.innerHTML = `
-            <div style="color: red; padding: 2rem; font-weight: bold;">CRITICAL ERROR: Failed to connect to the database. Please check console (F12) for details.</div>
-        `;
-    }
-    // Ensure app is hidden and loading is shown if we crash here
-    if (appDiv) appDiv.style.display = 'none';
-    if (loadingDiv) loadingDiv.style.display = 'block';
-  }
-};
-
-document.addEventListener('DOMContentLoaded', startApp);
+export default SwissTournament;
