@@ -84,13 +84,12 @@ let db;
 // --- Template Content Generation ---
 const welcomeDescriptionHTML = `
   <div class="welcome-section">
-    <h2>Welcome to the Turkey Tennis Doubles Invitational at Meadowbrook Local Park! 🦃🎾 </h2>
+    <h2>Turkey Tennis Doubles Invitational at Meadowbrook Local Park! 🦃🎾 </h2>
     <h3>November 22nd, 2025</h3>
     <h3>1:00PM</h3>
-    <p>Use the tabs above to explore the fun</p>
+    <p>Serve! Rally! Win!</p>
     <p>Pool play games will be one abbreviated set to 4 games with a 20 minute time cap.</p>
     <p>Bracket play will be one set to 6 games with no time cap.</p>
-    <p>Serve! Rally! Win!</p>
     <p></p>
     <p>Secret prize for the winners!</p>
   </div>
