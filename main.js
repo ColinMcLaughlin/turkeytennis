@@ -71,7 +71,7 @@ const INITIAL_BRACKET_MATCHES = {
 };
 
 const INITIAL_ALTERNATES = [
-  'Team Julia and Theo', 'Team Joel and Luke', 'Undisclosed', 'Team Adam and Vinny', 'Team PeeCeeTee'
+  'Team Julia and Theo', 'Team Joel and Luke', 'Undisclosed', 'Team Adam and Vinny', 'Team PeeCeeTee', "Others!"
 ];
 
 const CORRECT_PASSWORD = "turkey2024";
@@ -86,13 +86,13 @@ const welcomeDescriptionHTML = `
   <div class="welcome-section">
     <h2>Welcome to the Turkey Tennis Doubles Invitational at Meadowbrook Local Park! 🦃🎾 </h2>
     <h3>November 22nd, 2025</h3>
-    <p>Use the tabs above to view teams, see the schedule, and submit scores.</p>
+    <h3>1:00PM</h3>
+    <p>Use the tabs above to explore the fun</p>
     <p>Pool play games will be one abbreviated set to 4 games with a 20 minute time cap.</p>
     <p>Bracket play will be one set to 6 games with no time cap.</p>
-    <p>Court 4 (closest to the parking lot), will remain open for practice and/or community use throughout the tournament. </p>
-    <p>Do not be late to your first match.</p>
-    <p>The pools and bracket have been build to maximize the number of competitive games, while maintaining an advantage for winning.</p>
-    <p>Prize for the winning team.</p>
+    <p>Serve! Rally! Win!</p>
+    <p></p>
+    <p>Secret prize for the winners!</p>
     <p>Good luck to all the teams!</p>
   </div>
 `;
