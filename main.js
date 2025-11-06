@@ -391,7 +391,7 @@ const renderApp = () => {
             ${welcomeDescriptionHTML}
             
             <div class="teams-section">
-              <h2>Participating Teams</h2>
+              <h2>Meat 🍗 the teams</h2>
               <div class="teams-grid">
                 ${generateTeamsHTML()}
               </div>
