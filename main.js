@@ -93,7 +93,6 @@ const welcomeDescriptionHTML = `
     <p>Serve! Rally! Win!</p>
     <p></p>
     <p>Secret prize for the winners!</p>
-    <p>Good luck to all the teams!</p>
   </div>
 `;
 
