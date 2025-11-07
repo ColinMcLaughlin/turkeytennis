@@ -28,7 +28,7 @@ const INITIAL_TEAMS = [
   { name: 'uWu', players: ['Tab', 'NoNo'], pool: 'B', description: 'Actively over thinking their match and processing the situation like anime ' },
   { name: 'Just Roomates', players: ['Moose', 'Austin'], pool: 'A', description: 'Just roomates I swear' },
   { name: 'Towson Y', players: ['Dan', 'Sara'], pool: 'A', description: 'ugh, another towson.' },
-  { name: 'Team Fun', players: ['Colin', 'Cait'], pool: 'A', description: 'vroom vroom' },
+  { name: 'Team Fun', players: ['Colin', 'Cait'], pool: 'B', description: 'vroom vroom' },
   { name: 'Team 1 Bed 1 Bath 1 Den', players: ['Dan FB', 'Jess'], pool: 'B', description: 'Will be good unless kaboom' }
 ];
 
