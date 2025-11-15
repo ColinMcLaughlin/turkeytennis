@@ -22,7 +22,7 @@ const TOURNAMENT_DOC_REF = `artifacts/${appId}/public/data/tournament/tournament
 
 // --- Initial Tournament State (Used only if no data exists in Firestore) ---
 const INITIAL_TEAMS = [
-  { name: 'PCJackthany', players: ['jackthany', 'mas'], pool: 'A', description: 'who tf knows what will happen.' },
+  { name: 'PCJackThany', players: ['jackthany', 'mas'], pool: 'A', description: 'who tf knows what will happen.' },
   { name: 'Where is my husband', players: ['Brooke', 'Varidhi'], pool: 'B', description: 'Brooke is without her husband who is tall. But she should play well.' },
   { name: 'Siblings or Married', players: ['Laurel', 'Zim'], pool: 'A', description: 'Jury is still out. Might be both' },
   { name: 'uWu', players: ['Tab', 'NoNo'], pool: 'B', description: 'Actively over thinking their match and processing the situation like anime ' },
