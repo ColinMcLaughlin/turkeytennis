@@ -74,7 +74,7 @@ const INITIAL_BRACKET_MATCHES = {
 };
 
 const INITIAL_ALTERNATES = [
-  'Team Julia and Theo', 'Team Joel and Luke', 'Undisclosed', 'Team Adam and Vinny', 'Team PeeCeeTee', "Others!"
+  'Team Julia and Theo, goodluck to TK on his thesis', 'Chris Scalzi might hangout', 'Undisclosed', 'Secret','Camille might hangout' ,'Maybe the cacopardos will come', "maybe colin little brother will play"
 ];
 
 const CORRECT_PASSWORD = "turkey2024";
@@ -133,7 +133,7 @@ const generateTeamDetailsHTML = () => tournamentState.teams.map((team, idx) => `
 const getRecords = () => {
   const records = {};
   tournamentState.teams.forEach((team, idx) => {
-    records[idx] = { wins: 0, losses: 0 };
+    records[idx] = { wins: 0, losses: 0, ties: 0 };
   });
 
   tournamentState.matchSchedule.forEach(match => {
@@ -146,6 +146,9 @@ const getRecords = () => {
         } else if (scores[1] > scores[0]) {
           records[match.team2Idx].wins++;
           records[match.team1Idx].losses++;
+        } else if (scores[0] === scores[1]) { // Logic for a Tie
+          records[match.team1Idx].ties++;
+          records[match.team2Idx].ties++;
         }
       }
     }
@@ -387,25 +390,12 @@ const renderApp = () => {
           <button class="tab-button active" data-tab="home">Home</button>
           <button class="tab-button" data-tab="schedule">Schedule and Results</button>
           <button class="tab-button" data-tab="scores">Submit Scores</button>
-          <button class="tab-button" data-tab="teams">Team Details</button>
+          <button class="tab-button" data-tab="teams">🍗 the Teams</button>
         </div>
         <div class="tab-content">
           <div id="home" class="tab-pane active">
             ${welcomeDescriptionHTML}
             
-            <div class="teams-section">
-              <h2>Meat 🍗 the teams</h2>
-              <div class="teams-grid">
-                ${generateTeamsHTML()}
-              </div>
-            </div>
-            <div class="alternates-section">
-              <h2>Alternates</h2>
-              <ul class="alternates-list">
-                ${generateAlternatesHTML()}
-              </ul>
-            </div>
-          </div>
           <div id="schedule" class="tab-pane">
             <h2>Schedule and Results</h2>
             <div class="subtabs">
