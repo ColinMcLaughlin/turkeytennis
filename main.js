@@ -395,7 +395,7 @@ const renderApp = () => {
         <div class="tab-content">
           <div id="home" class="tab-pane active">
             ${welcomeDescriptionHTML}
-            
+        </div>    
           <div id="schedule" class="tab-pane">
             <h2>Schedule and Results</h2>
             <div class="subtabs">
