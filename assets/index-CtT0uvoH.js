@@ -167,7 +167,7 @@ import{initializeApp as D}from"https://www.gstatic.com/firebasejs/11.6.1/firebas
         <div class="tab-content">
           <div id="home" class="tab-pane active">
             ${Y}
-            
+        </div>    
           <div id="schedule" class="tab-pane">
             <h2>Schedule and Results</h2>
             <div class="subtabs">
