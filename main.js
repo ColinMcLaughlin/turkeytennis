@@ -20,42 +20,69 @@ const initialAuthToken = null;
 // Tournament Document Path 
 const TOURNAMENT_DOC_REF = `artifacts/${appId}/public/data/tournament/tournament-state`;
 
-// --- Initial Tournament State (Used only if no data exists in Firestore) ---
+// --- Initial Tournament State ---
+// UPDATED: 10 Teams total (5 per pool)
 const INITIAL_TEAMS = [
-  { name: 'PCJackThany', players: ['jackthany', 'mas'], pool: 'A', description: 'who tf knows what will happen.' },
-  { name: 'Where is my husband', players: ['Brooke', 'Varidhi'], pool: 'B', description: 'Brooke is without her husband who is tall. But she should play well.' },
-  { name: 'Siblings or Married', players: ['Laurel', 'Zim'], pool: 'A', description: 'Jury is still out. Might be both' },
-  { name: 'uWu', players: ['Tab', 'NoNo'], pool: 'B', description: 'Actively over thinking their match and processing the situation like anime ' },
-  { name: 'Just Roomates', players: ['Moose', 'Austin'], pool: 'A', description: 'Just roomates I swear' },
-  { name: 'Towson Y', players: ['Dan', 'Sara'], pool: 'A', description: 'ugh, another towson.' },
-  { name: 'Team Fun', players: ['Colin', 'Cait'], pool: 'B', description: 'vroom vroom' },
-  { name: 'Team 1 Bed 1 Bath 1 Den', players: ['Dan FB', 'Jess'], pool: 'B', description: 'Will be good unless kaboom' }
+  // Original 8
+  { name: 'PCJackThany', players: ['probably jack', 'mas'], pool: 'A', description: 'who tf knows what will happen.' }, // Idx 0
+  { name: 'Where is my husband', players: ['Brooke', 'Varidhi'], pool: 'B', description: 'Brooke is without her husband who is tall. But she should play well.' }, // Idx 1
+  { name: 'Siblings or Married', players: ['Laurel', 'Zim'], pool: 'A', description: 'Jury is still out. Might be both' }, // Idx 2
+  { name: 'uWu', players: ['Tab', 'NoNo'], pool: 'B', description: 'Actively over thinking their match and processing the situation like anime ' }, // Idx 3
+  { name: 'Just Roomates', players: ['Moose', 'Austin'], pool: 'A', description: 'Just roomates I swear' }, // Idx 4
+  { name: 'Towson Y', players: ['Dan', 'Sara'], pool: 'A', description: 'ugh, another towson.' }, // Idx 5
+  { name: 'Team Fun', players: ['Colin', 'Cait'], pool: 'B', description: 'vroom vroom' }, // Idx 6
+  { name: 'Team 1 Bed 1 Bath 1 Den', players: ['Dan FB', 'Jess'], pool: 'B', description: 'Will be good unless kaboom' }, // Idx 7
+  // New 2 Blank Teams
+  { name: 'Julia and Theo', players: ['Julia', 'Theo'], pool: 'A', description: 'New challenger approaching' }, // Idx 8
+  { name: 'Surprise Team', players: ['TBD', 'TBD'], pool: 'B', description: 'New challenger approaching' }  // Idx 9
 ];
 
+// UPDATED: Schedule for 10 teams on 4 courts
+// Pool A Indices: 0, 2, 4, 5, 8
+// Pool B Indices: 1, 3, 6, 7, 9
 const INITIAL_SCHEDULE = [
+  // Round 1
   { time: '1:00 PM', court: '1', team1: 'PCJackThany', team2: 'Siblings or Married', pool: 'A', score: '-', team1Idx: 0, team2Idx: 2 },
   { time: '1:00 PM', court: '2', team1: 'Just Roomates', team2: 'Towson Y', pool: 'A', score: '-', team1Idx: 4, team2Idx: 5 },
   { time: '1:00 PM', court: '3', team1: 'Where is my husband', team2: 'uWu', pool: 'B', score: '-', team1Idx: 1, team2Idx: 3 },
-  { time: '1:20 PM', court: '1', team1: 'Team Fun', team2: 'Towson Y', pool: 'A', score: '-', team1Idx: 6, team2Idx: 5 },
-  { time: '1:20 PM', court: '2', team1: 'PCJackThany', team2: 'Just Roomates', pool: 'A', score: '-', team1Idx: 0, team2Idx: 4 },
-  { time: '1:20 PM', court: '3', team1: 'Team 1 Bed 1 Bath 1 Den', team2: 'uWu', pool: 'B', score: '-', team1Idx: 7, team2Idx: 3 },
-  { time: '1:40 PM', court: '1', team1: 'Siblings or Married', team2: 'Towson Y', pool: 'A', score: '-', team1Idx: 2, team2Idx: 5 },
-  { time: '1:40 PM', court: '2', team1: 'Where is my husband', team2: 'Team 1 Bed 1 Bath 1 Den', pool: 'B', score: '-', team1Idx: 1, team2Idx: 7 },
-  { time: '1:40 PM', court: '3', team1: 'PCJackThany', team2: 'Team Fun', pool: 'A', score: '-', team1Idx: 0, team2Idx: 6 },
-  { time: '2:00 PM', court: '1', team1: 'Just Roomates', team2: 'Siblings or Married', pool: 'A', score: '-', team1Idx: 4, team2Idx: 2 },
-  { time: '2:00 PM', court: '2', team1: 'uWu', team2: 'Where is my husband', pool: 'B', score: '-', team1Idx: 3, team2Idx: 1 },
-  { time: '2:00 PM', court: '3', team1: 'Team Fun', team2: 'Siblings or Married', pool: 'A', score: '-', team1Idx: 6, team2Idx: 2 },
-  { time: '2:20 PM', court: '1', team1: 'Team 1 Bed 1 Bath 1 Den', team2: 'Where is my husband', pool: 'B', score: '-', team1Idx: 7, team2Idx: 1 },
-  { time: '2:20 PM', court: '2', team1: 'Open Slot A', team2: 'Towson Y', pool: 'A', score: '-', team1Idx: 0, team2Idx: 5 },
-  { time: '2:40 PM', court: '1', team1: 'Team Fun', team2: 'Just Roomates', pool: 'A', score: '-', team1Idx: 6, team2Idx: 4 }
+  { time: '1:00 PM', court: '4', team1: 'Team Fun', team2: 'Team 1 Bed 1 Bath 1 Den', pool: 'B', score: '-', team1Idx: 6, team2Idx: 7 },
+
+  // Round 2
+  { time: '1:20 PM', court: '1', team1: 'PCJackThany', team2: 'Just Roomates', pool: 'A', score: '-', team1Idx: 0, team2Idx: 4 },
+  { time: '1:20 PM', court: '2', team1: 'Siblings or Married', team2: 'Julia and Theo', pool: 'A', score: '-', team1Idx: 2, team2Idx: 8 },
+  { time: '1:20 PM', court: '3', team1: 'Where is my husband', team2: 'Team Fun', pool: 'B', score: '-', team1Idx: 1, team2Idx: 6 },
+  { time: '1:20 PM', court: '4', team1: 'uWu', team2: 'Surprise Team', pool: 'B', score: '-', team1Idx: 3, team2Idx: 9 },
+
+  // Round 3
+  { time: '1:40 PM', court: '1', team1: 'PCJackThany', team2: 'Towson Y', pool: 'A', score: '-', team1Idx: 0, team2Idx: 5 },
+  { time: '1:40 PM', court: '2', team1: 'Just Roomates', team2: 'Julia and Theo', pool: 'A', score: '-', team1Idx: 4, team2Idx: 8 },
+  { time: '1:40 PM', court: '3', team1: 'Where is my husband', team2: 'Team 1 Bed 1 Bath 1 Den', pool: 'B', score: '-', team1Idx: 1, team2Idx: 7 },
+  { time: '1:40 PM', court: '4', team1: 'Team Fun', team2: 'Surprise Team', pool: 'B', score: '-', team1Idx: 6, team2Idx: 9 },
+
+  // Round 4
+  { time: '2:00 PM', court: '1', team1: 'PCJackThany', team2: 'Julia and Theo', pool: 'A', score: '-', team1Idx: 0, team2Idx: 8 },
+  { time: '2:00 PM', court: '2', team1: 'Siblings or Married', team2: 'Towson Y', pool: 'A', score: '-', team1Idx: 2, team2Idx: 5 },
+  { time: '2:00 PM', court: '3', team1: 'Where is my husband', team2: 'Surprise Team', pool: 'B', score: '-', team1Idx: 1, team2Idx: 9 },
+  { time: '2:00 PM', court: '4', team1: 'uWu', team2: 'Team 1 Bed 1 Bath 1 Den', pool: 'B', score: '-', team1Idx: 3, team2Idx: 7 },
+
+  // Round 5
+  { time: '2:20 PM', court: '1', team1: 'Siblings or Married', team2: 'Just Roomates', pool: 'A', score: '-', team1Idx: 2, team2Idx: 4 },
+  { time: '2:20 PM', court: '2', team1: 'Towson Y', team2: 'New Team A', pool: 'A', score: '-', team1Idx: 5, team2Idx: 8 },
+  { time: '2:20 PM', court: '3', team1: 'uWu', team2: 'Team Fun', pool: 'B', score: '-', team1Idx: 3, team2Idx: 6 },
+  { time: '2:20 PM', court: '4', team1: 'Team 1 Bed 1 Bath 1 Den', team2: 'Surprise Team', pool: 'B', score: '-', team1Idx: 7, team2Idx: 9 }
 ];
 
+// UPDATED: Bracket now includes Play-Ins
 const INITIAL_BRACKET_MATCHES = {
+  playIns: [
+    { id: 'pi1', team1: 'Pool A 4th', team2: 'Pool B 5th', score: '-', winner: null }, // Winner plays Pool B 1st
+    { id: 'pi2', team1: 'Pool B 4th', team2: 'Pool A 5th', score: '-', winner: null }  // Winner plays Pool A 1st
+  ],
   quarterfinals: [
-    { id: 'qf1', team1: 'Pool A 1st', team2: 'Pool B 4th', score: '-', winner: null },
-    { id: 'qf2', team1: 'Pool B 2nd', team2: 'Pool A 3th', score: '-', winner: null },
+    { id: 'qf1', team1: 'Pool A 1st', team2: 'Winner PI2', score: '-', winner: null }, // 1 vs 8 seed equivalent
+    { id: 'qf2', team1: 'Pool B 2nd', team2: 'Pool A 3rd', score: '-', winner: null },
     { id: 'qf3', team1: 'Pool A 2nd', team2: 'Pool B 3rd', score: '-', winner: null },
-    { id: 'qf4', team1: 'Pool B 1st', team2: 'Pool A 4th', score: '-', winner: null }
+    { id: 'qf4', team1: 'Pool B 1st', team2: 'Winner PI1', score: '-', winner: null }  // 1 vs 8 seed equivalent
   ],
   semifinals: [
     { id: 'sf1', team1: 'Winner QF1', team2: 'Winner QF2', score: '-', winner: null },
@@ -93,8 +120,13 @@ const welcomeDescriptionHTML = `
     <p>Serve! Rally! Win!</p>
     <p>Pool play games will be one abbreviated set to 4 games with a 20 minute time cap.</p>
     <p>Bracket play will be one set to 6 games with no time cap.</p>
-    <p></p>
+    <p><strong>New:</strong> 10 Teams, 4 Courts! Play-in games for the Championship Bracket.</p>
     <p>Secret prize for the winners!</p>
+    <p></p>
+    <p></P>
+    <p>Goal is enjoyment</p>
+    <p>If both teams agree, do a 'friendly serve'.  This is, ignore the service box, as long as the other team can return it, it is a good serve!</p>
+    <p>If both teams agree, and scoring is confusing, just play a game to 21.  Switch who the server is on some fixed number of points</p>
   </div>
 `;
 
@@ -273,6 +305,11 @@ const generateBracketsHTML = () => {
   
   const bracketHTML = `
     <div class="bracket-container">
+      <div class="bracket-round">
+        <h3>Play-Ins</h3>
+        ${b.playIns ? b.playIns.map(renderMatch).join('') : '<p>No Play-ins</p>'}
+      </div>
+
       <div class="bracket-round">
         <h3>Quarterfinals</h3>
         ${b.quarterfinals.map(renderMatch).join('')}
@@ -538,6 +575,7 @@ const updateBracketMatchSelect = () => {
   const b = tournamentState.bracketMatches;
   
   const sections = [
+    { round: 'pi', matches: b.playIns || [], prefix: 'Play-In' },
     { round: 'qf', matches: b.quarterfinals, prefix: 'Quarterfinal' },
     { round: 'sf', matches: b.semifinals, prefix: 'Semifinal' },
     { round: 'f', matches: b.finals, prefix: 'Finals' },
@@ -662,22 +700,34 @@ const attachEventListeners = () => {
     
     let newBracketMatches = JSON.parse(JSON.stringify(tournamentState.bracketMatches)); 
     
-    // Seed the bracket (Top 4 from each pool)
-    newBracketMatches.quarterfinals[0].team1 = poolATeams[0].name;
-    newBracketMatches.quarterfinals[0].team2 = poolBTeams[3].name;
-    newBracketMatches.quarterfinals[1].team1 = poolBTeams[1].name;
-    newBracketMatches.quarterfinals[1].team2 = poolATeams[2].name;
-    newBracketMatches.quarterfinals[2].team1 = poolATeams[1].name;
-    newBracketMatches.quarterfinals[2].team2 = poolBTeams[2].name;
-    newBracketMatches.quarterfinals[3].team1 = poolBTeams[0].name;
-    newBracketMatches.quarterfinals[3].team2 = poolATeams[3].name;
+    // Seed the Play-ins (A4 vs B5, B4 vs A5)
+    if(newBracketMatches.playIns && newBracketMatches.playIns.length >= 2) {
+      newBracketMatches.playIns[0].team1 = poolATeams[3].name; // A 4th
+      newBracketMatches.playIns[0].team2 = poolBTeams[4].name; // B 5th
+      
+      newBracketMatches.playIns[1].team1 = poolBTeams[3].name; // B 4th
+      newBracketMatches.playIns[1].team2 = poolATeams[4].name; // A 5th
+    }
+
+    // Seed the determined Quarterfinals
+    newBracketMatches.quarterfinals[0].team1 = poolATeams[0].name; // A 1st
+    // QF1 Team 2 waits for PlayIn 2 Winner
+    
+    newBracketMatches.quarterfinals[1].team1 = poolBTeams[1].name; // B 2nd
+    newBracketMatches.quarterfinals[1].team2 = poolATeams[2].name; // A 3rd
+    
+    newBracketMatches.quarterfinals[2].team1 = poolATeams[1].name; // A 2nd
+    newBracketMatches.quarterfinals[2].team2 = poolBTeams[2].name; // B 3rd
+    
+    newBracketMatches.quarterfinals[3].team1 = poolBTeams[0].name; // B 1st
+    // QF4 Team 2 waits for PlayIn 1 Winner
     
     await saveState({
         bracketMatches: newBracketMatches,
         bracketPlayActive: true
     });
     
-    document.getElementById('result').textContent = 'Pool play concluded! Bracket play has begun.';
+    document.getElementById('result').textContent = 'Pool play concluded! Play-in games are set.';
     document.getElementById('result').className = 'result success';
   };
 
@@ -710,7 +760,14 @@ const attachEventListeners = () => {
       successorLogic(winner, loser);
     };
 
-    if (round === 'qf') {
+    if (round === 'pi') {
+      updateAndPropagate(newBracketMatches.playIns, idx, (w, l) => {
+         // Play In 1 Winner goes to QF4 (Plays B1)
+         if (idx === 0) { newBracketMatches.quarterfinals[3].team2 = w; }
+         // Play In 2 Winner goes to QF1 (Plays A1)
+         if (idx === 1) { newBracketMatches.quarterfinals[0].team2 = w; }
+      });
+    } else if (round === 'qf') {
       updateAndPropagate(newBracketMatches.quarterfinals, idx, (w, l) => {
         if (idx === 0) { newBracketMatches.semifinals[0].team1 = w; newBracketMatches.consolationSemis[0].team1 = l; } 
         else if (idx === 1) { newBracketMatches.semifinals[0].team2 = w; newBracketMatches.consolationSemis[0].team2 = l; } 
